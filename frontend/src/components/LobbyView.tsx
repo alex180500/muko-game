@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // The URL of your Render backend
-const SERVER_URL = import.meta.env.VITE_GAME_SERVER || 'http://localhost:8000';
+const SERVER_URL = import.meta.env.VITE_GAME_SERVER || "http://localhost:8000";
 
 const LobbyView = () => {
   const navigate = useNavigate();
@@ -31,32 +31,41 @@ const LobbyView = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Müko Online</h1>
-      
-      <div style={{ marginBottom: '40px' }}>
-        <button 
+
+      <div style={{ marginBottom: "40px" }}>
+        <button
           onClick={createMatch}
-          style={{ padding: '10px 20px', fontSize: '1.2rem', cursor: 'pointer' }}
+          style={{
+            padding: "10px 20px",
+            fontSize: "1.2rem",
+            cursor: "pointer",
+          }}
         >
           Create New Game (Host)
         </button>
       </div>
 
-      <hr style={{ width: '200px' }} />
+      <hr style={{ width: "200px" }} />
 
-      <div style={{ marginTop: '40px' }}>
+      <div style={{ marginTop: "40px" }}>
         <h3>Join a Game</h3>
-        <input 
-          type="text" 
-          placeholder="Enter Game Code" 
+        <input
+          type="text"
+          placeholder="Enter Game Code"
           value={joinID}
           onChange={(e) => setJoinID(e.target.value)}
-          style={{ padding: '8px', fontSize: '1rem' }}
+          style={{ padding: "8px", fontSize: "1rem" }}
         />
-        <button 
+        <button
           onClick={joinMatch}
-          style={{ marginLeft: '10px', padding: '8px 16px', fontSize: '1rem', cursor: 'pointer' }}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 16px",
+            fontSize: "1rem",
+            cursor: "pointer",
+          }}
         >
           Join
         </button>
