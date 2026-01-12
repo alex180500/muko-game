@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    // This allows the server to import "../frontend/src/Game.ts"
+    "rootDir": "..", 
+    "outDir": "./dist"
+  },
+  "include": ["./**/*.ts", "../frontend/src/Game.ts"]
+}

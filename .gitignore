@@ -1,0 +1,19 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+
+# Environment variables (NEVER commit these!)
+.env
+.env.local
