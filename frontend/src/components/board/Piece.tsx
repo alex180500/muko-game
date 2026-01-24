@@ -13,8 +13,8 @@ export const Piece = memo(({ color }: PieceProps) => {
   return (
     <div
       style={{
-        width: "80%",
-        height: "80%",
+        width: "90%",
+        height: "90%",
         transition: "transform 0.2s",
         pointerEvents: "none", // Let clicks pass through to the square
         display: "flex",
