@@ -14,8 +14,10 @@ export const Muko: Game = {
 
         // Classic Ugolki setup: 4x4 (12 pieces usually) or 3x4 in corners.
         // Let's do a 3x3 block in corners for simplicity to start.
-        if (x < 3 && y < 3) return "0"; // Top-Left corner (Player 0)
-        if (x >= 5 && y >= 5) return "1"; // Bottom-Right corner (Player 1)
+        // White (Player 0) in Bottom-Left
+        if (x < 3 && y >= 5) return "0";
+        // Black (Player 1) in Top-Right
+        if (x >= 5 && y < 3) return "1";
         return null;
       }),
   }),
