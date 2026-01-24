@@ -4,7 +4,9 @@ import { SocketIO } from "boardgame.io/multiplayer";
 import { Muko } from "../Game"; // Your rules
 import { MukoBoard } from "../Board"; // Your board UI
 
-const SERVER_URL = import.meta.env.VITE_GAME_SERVER || "http://localhost:8000";
+// The URL of your Render backend.
+// In development, we use window.location.hostname to support mobile testing on local network.
+const SERVER_URL = import.meta.env.VITE_GAME_SERVER || `http://${window.location.hostname}:8000`;
 
 // We create a "GameClient" component dynamically based on the match ID
 const GameView = () => {

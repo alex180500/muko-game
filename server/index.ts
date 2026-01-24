@@ -6,7 +6,10 @@ const server = Server({
   games: [Muko],
   origins: [
     Origins.LOCALHOST,
-    "https://your-frontend-on-vercel.app", // Your Vercel domain
+    // Allow interactions from local network (for mobile testing)
+    /^http:\/\/(\d+\.\d+\.\d+\.\d+|localhost)(:\d+)?$/, 
+    // Your Vercel domain
+    'https://your-frontend-on-vercel.app',
   ],
 });
 

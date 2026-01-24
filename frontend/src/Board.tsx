@@ -43,8 +43,10 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(8, 60px)", // Fixed size for now, can be responsive later
-          gridTemplateRows: "repeat(8, 60px)",
+          gridTemplateColumns: "repeat(8, 1fr)",
+          gridTemplateRows: "repeat(8, 1fr)",
+          width: "min(95vw, 90vh, 600px)",
+          aspectRatio: "1",
           border: "5px solid #333",
           borderRadius: "3px",
         }}
