@@ -1,14 +1,14 @@
 # Müko
 
-**Müko** is a two-player abstract strategy game played on an 8x8 board. It is inspired by **Ugolki** (also known as Corners), a variation of checkers popular in Eastern Europe.
-
 > [!NOTE]
 > This project is under early development. Features, rules, and assets may change over time.
 
+**Müko** is a two-player abstract strategy game played on an 8x8 board. It is inspired by **Ugolki** (also known as Corners), a variation of checkers popular in Eastern Europe.
+
 _Right now, the game is built to be playable online via sharable invite links._
 
-> [!IMPORTANT]
-> Although the core game logic is Open Source, all artistic assets and branding are proprietary. Please see the **License & Intellectual Property** section at the bottom of this README for details.
+> [!CAUTION]
+> Although the core game code is Open Source, all artistic assets, game concept and branding are proprietary. Please see the **License & Intellectual Property** section at the bottom of this README for details.
 
 ## 🎮 How to Play
 
@@ -34,6 +34,8 @@ The goal of the game is to move all of your pieces from your starting corner to 
 - **Click** a valid destination square to move.
 - **Flip Board**: Click the "Flip Board" button to rotate the view (Player 1/Black sees the board flipped by default).
 - **Home**: Click the House icon to return to the main lobby.
+
+---
 
 ## 🏗️ Project Architecture & Deployment
 
@@ -99,7 +101,7 @@ This project operates under a **Dual License** model. Please read carefully to u
 
 The core logic, algorithms, and technical implementation (e.g., JavaScript/TypeScript code, game engine logic) are licensed under the **Apache License 2.0**. _See the [LICENSE](./LICENSE) file for the full legal text._
 
-> [!IMPORTANT]
+> [!TIP]
 > ✅ **You may:** Learn from the code, fork it, modify it for your own use and projects, even for commercial use, but for your own distinct projects.
 
 ### 2. The Game Assets & Core Identity (Proprietary / All Rights Reserved)
@@ -121,4 +123,4 @@ The "Soul" of the game is **NOT** Open Source. All artistic assets, including bu
 - ✅ **Personal Use:** You **ARE** allowed to download, build, and run the game locally on your own machine for educational purposes or personal enjoyment.
 - ✅ **Code Reuse:** You **ARE** allowed to copy and adapt the source code for your own projects, provided you do not use any of the proprietary assets or branding.
 
-If you have any questions about licensing or usage, please feel free to contact me at `alessandro.romancino@gmail.com`.
+If you have any questions about licensing or usage, please feel free to contact me at `alessandro.romancino@gmail.com`
