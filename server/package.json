@@ -1,7 +1,8 @@
 {
-  "name": "server",
+  "name": "muko-server",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
+  "description": "Backend game server for Muko",
   "main": "index.js",
   "scripts": {
     "start": "tsx index.ts",
