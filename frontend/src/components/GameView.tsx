@@ -1,5 +1,5 @@
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaDice } from "react-icons/fa";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
 import { Muko } from "../Game"; // Your rules
@@ -60,24 +60,67 @@ const GameView = () => {
         <div>
           Match Code: <strong>{matchID}</strong>
           <br />
-          Playing as: <strong>{playerID ? `Player ${playerID}` : "Spectator"}</strong>
+          Playing as:{" "}
+          <strong>{playerID ? `Player ${playerID}` : "Spectator"}</strong>
         </div>
       </div>
 
       <div style={{ marginTop: 50 }}>
         {/* If no ID is provided in URL, show buttons to pick a seat */}
         {!playerID && (
-          <div style={{ color: "white", textAlign: "center" }}>
-            <p>Who are you?</p>
-            <a
-              href={`/play/${matchID}?playerID=0`}
-              style={{ color: "#aaf", marginRight: 20 }}
+          <div
+            style={{
+              color: "white",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0px",
+              marginTop: "20px",
+              marginBottom: "20px",
+              alignItems: "center",
+            }}
+          >
+            <h2>Choose your side</h2>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
             >
-              Play as White
-            </a>
-            <a href={`/play/${matchID}?playerID=1`} style={{ color: "#aaf" }}>
-              Play as Black
-            </a>
+              <Link
+                to={`/play/${matchID}?playerID=0`}
+                className="btn-modern"
+                style={{
+                  backgroundColor: "#e0e0e0",
+                  color: "#333",
+                  border: "none",
+                }}
+              >
+                Play as White
+              </Link>
+
+              <Link
+                to={`/play/${matchID}?playerID=${Math.random() < 0.5 ? "0" : "1"}`}
+                className="btn-modern"
+                style={{ padding: "10px 15px", display: "flex", alignItems: "center" }}
+              >
+                <FaDice size={24} />
+              </Link>
+
+              <Link
+                to={`/play/${matchID}?playerID=1`}
+                className="btn-modern"
+                style={{
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #555",
+                }}
+              >
+                Play as Black
+              </Link>
+            </div>
           </div>
         )}
 
