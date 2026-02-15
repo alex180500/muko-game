@@ -3,7 +3,7 @@
 > [!NOTE]
 > This project is under early development. Features, rules, and assets may change over time.
 
-**Müko** is a two-player abstract strategy game played on an 8x8 board. It is inspired by **Ugolki** (also known as Corners), a variation of checkers popular in Eastern Europe.
+**Müko** is a two-player strategy game played on an 8x8 (chess) board. It is inspired by **Ugolki** (also known as Corners), a variation of checkers popular in Eastern Europe.
 
 _Right now, the game is built to be playable online via sharable invite links._
 
@@ -14,28 +14,27 @@ _Right now, the game is built to be playable online via sharable invite links._
 
 ### Objective
 
-The goal of the game is to move all of your pieces from your starting corner to the opponent's starting corner.
+The goal of the game is to move all of your pieces from your starting positions to the opponent's starting positions. There is no capturing in Müko. Pieces remain on the board; the goal is simply to race to the other side.
+
+There are two possible setups in the game, which you can choose when creating a new game.
 
 ### Rules
 
-1.  **Setup**:
-    - **White (Player 0)** starts in the **Bottom-Left** corner (3x3 grid).
-    - **Black (Player 1)** starts in the **Top-Right** corner (3x3 grid).
-2.  **Movement**:
-    - Players take turns moving **one piece** per turn.
-    - A piece can move in two ways:
-      1.  **Slide**: Move one square orthogonally (horizontally or vertically) into an empty adjacent square.
-      2.  **Jump**: Jump over an adjacent piece (friendly or opponent's) into an empty square immediately beyond it.
-3.  **Capturing**: There is **no capturing** in Müko. Pieces remain on the board; the goal is simply to race to the other side.
+1. **Players**: Player 0 (White) and Player 1 (Black).
+2. **Setup**: The game allows two different kinds of setups:
+   - _3x3_ - Each player starts with 9 pieces arranged in a 3x3 grid in their respective corner (bottom-left for white, top-right for black).
+   - _3x4_ - Each player starts with 12 pieces arranged in a 3x4 grid in their respective corner.
+3. **Movement**: Players take turns moving one piece per turn in two possible ways:
+   - **Slide**: Move one square orthogonally (horizontally or vertically) into an empty adjacent square.
+   - **Jumps**: Jump over an adjacent piece (friendly or opponent's) into an empty square immediately beyond it. You can chain multiple jumps in one single movement for big leaps across the board.
 
 ### Controls
 
-- **Click** a piece to select it (highlighted in transparent green).
-- **Click** a valid destination square to move.
+- **Movement**: The game is designed to be played with a mouse or touch input.
+   - **Clicks or touch**: select a piece and then select a valid destination square to move.
+   - **Drag and Drop**: You can also drag a piece to a valid destination square to move it.
 - **Flip Board**: Click the "Flip Board" button to rotate the view (Player 1/Black sees the board flipped by default).
 - **Home**: Click the House icon to return to the main lobby.
-
----
 
 ## 🏗️ Project Architecture & Deployment
 
@@ -45,7 +44,7 @@ This project is organized as a monorepo containing both the frontend client and 
 
 - **Engine**: [boardgame.io](https://boardgame.io/) (State management & Multiplayer)
 - **Frontend**: React, Vite, TypeScript, CSS Modules.
-- **Backend**: Node.js (v18+), Koa.
+- **Backend**: Node.js, Koa (with boardgame.io).
 
 ### Running Locally
 
@@ -123,4 +122,4 @@ The "Soul" of the game is **NOT** Open Source. All artistic assets, including bu
 - ✅ **Personal Use:** You **ARE** allowed to download, build, and run the game locally on your own machine for educational purposes or personal enjoyment.
 - ✅ **Code Reuse:** You **ARE** allowed to copy and adapt the source code for your own projects, provided you do not use any of the proprietary assets or branding.
 
-If you have any questions about licensing or usage, please feel free to contact me at `alessandro.romancino@gmail.com`
+If you have any questions about licensing or usage, please feel free to contact me at `alessandro.romancino@gmail.com`.
