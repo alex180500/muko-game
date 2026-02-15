@@ -5,12 +5,14 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "vitest"
   },
   "dependencies": {
     "boardgame.io": "^0.50.2"
   },
   "devDependencies": {
-    "typescript": "^5.2.0"
+    "typescript": "^5.2.0",
+    "vitest": "^4.0.18"
   }
 }

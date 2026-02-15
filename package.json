@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "predev": "npm run build -w @muko/logic",
     "dev": "concurrently \"npm run dev:logic\" \"npm run dev:server\" \"npm run dev:frontend\"",
     "dev:logic": "npm run watch -w @muko/logic",
     "dev:frontend": "npm run dev -w muko-frontend",
