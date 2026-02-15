@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
+import "./components/board/Board.css";
 
 // Coordinates
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -79,9 +80,10 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
             return (
               <Square
                 key={visualIdx}
+                id={id}
                 isDark={isDark}
                 isSelected={selected === id}
-                onClick={() => onClick(id)}
+                onClick={onClick}
                 rank={rankLabel}
                 file={fileLabel}
               >

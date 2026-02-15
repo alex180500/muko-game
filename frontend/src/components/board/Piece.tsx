@@ -11,26 +11,8 @@ export const Piece = memo(({ color }: PieceProps) => {
   const altText = color === "0" ? "White Piece" : "Black Piece";
 
   return (
-    <div
-      style={{
-        width: "90%",
-        height: "90%",
-        transition: "transform 0.2s",
-        pointerEvents: "none", // Let clicks pass through to the square
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <img
-        src={src}
-        alt={altText}
-        style={{
-          width: "100%",
-          height: "100%",
-          // filter: 'drop-shadow(1px 2px 2px rgba(0,0,0,0.4))'
-        }}
-      />
+    <div className="piece-container">
+      <img src={src} alt={altText} className="piece-image" />
     </div>
   );
 });

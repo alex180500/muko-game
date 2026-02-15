@@ -1,5 +1,5 @@
 :root {
-  --bg-color: #161512; /* Lichess dark bg */
+  --bg-color: #161512;
   --board-light: #f0d9b5;
   --board-dark: #b58863;
   --primary-btn: #3692e7;
@@ -76,3 +76,6 @@ h3 {
   display: flex;
   gap: 10px;
 }
+
+/* --- Game Board Styles Moved to Board.css --- */
+
