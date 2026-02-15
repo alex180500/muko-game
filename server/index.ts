@@ -1,6 +1,6 @@
 // server/index.ts
 import { Server, Origins } from "boardgame.io/server";
-import { Muko } from "../frontend/src/Game";
+import { Muko } from "@muko/logic";
 
 const customGenerator = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();

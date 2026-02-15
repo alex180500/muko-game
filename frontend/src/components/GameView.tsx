@@ -2,7 +2,7 @@ import { useParams, useSearchParams, Link } from "react-router-dom";
 import { FaHome, FaDice } from "react-icons/fa";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
-import { Muko } from "../Game"; // Your rules
+import { Muko } from "@muko/logic"; // Your rules
 import { MukoBoard } from "../Board"; // Your board UI
 
 // The URL of your Render backend.

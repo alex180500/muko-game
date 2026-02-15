@@ -1,0 +1,19 @@
+{
+  "name": "muko-root",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "server",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:logic\" \"npm run dev:server\" \"npm run dev:frontend\"",
+    "dev:logic": "npm run watch -w @muko/logic",
+    "dev:frontend": "npm run dev -w muko-frontend",
+    "dev:server": "npm run dev -w muko-server",
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
