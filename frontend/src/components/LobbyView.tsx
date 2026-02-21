@@ -28,7 +28,7 @@ const LobbyView = () => {
 
       <div className="mb-10">
         <button onClick={createMatch} className="btn-modern primary text-[1.2rem]!">
-          Create New Game (Host)
+          Create New Game
         </button>
       </div>
 

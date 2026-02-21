@@ -1,11 +1,46 @@
 import type { Game } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 
+/** Returns all valid destination indices for a piece at `from`. Mirrors server move validation exactly. */
+export function getValidMoves(cells: (string | null)[], from: number): number[] {
+  const x1 = from % 8;
+  const y1 = Math.floor(from / 8);
+  const valid: number[] = [];
+
+  const check = (x2: number, y2: number) => {
+    if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) return;
+    const to = y2 * 8 + x2;
+    if (cells[to] !== null) return;
+
+    const dx = Math.abs(x1 - x2);
+    const dy = Math.abs(y1 - y2);
+    const isSlide = dx + dy === 1;
+
+    let isJump = false;
+    if ((dx === 2 && dy === 0) || (dx === 0 && dy === 2)) {
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2;
+      if (cells[midY * 8 + midX] !== null) isJump = true;
+    }
+
+    if (isSlide || isJump) valid.push(to);
+  };
+
+  // Slides
+  check(x1 + 1, y1); check(x1 - 1, y1);
+  check(x1, y1 + 1); check(x1, y1 - 1);
+  // Jumps
+  check(x1 + 2, y1); check(x1 - 2, y1);
+  check(x1, y1 + 2); check(x1, y1 - 2);
+
+  return valid;
+}
+
 export const Muko: Game = {
   name: "muko",
 
   setup: () => ({
-    // 8x8 chessboard. 0 = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
+    // 8x8 chessboard. null = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
     cells: Array(64)
       .fill(null)
       .map((_, i) => {
@@ -17,6 +52,7 @@ export const Muko: Game = {
         if (x >= 5 && y < 3) return "1";
         return null;
       }),
+    lastMove: null as { from: number; to: number } | null,
   }),
 
   turn: {
@@ -58,6 +94,7 @@ export const Muko: Game = {
       // Execute move
       G.cells[to] = G.cells[from];
       G.cells[from] = null;
+      G.lastMove = { from, to };
     },
   },
 };

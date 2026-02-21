@@ -2,7 +2,12 @@
 
 .piece-container {
   @apply w-[90%] h-[90%] pointer-events-none flex justify-center items-center
-         transition-transform duration-200;
+         transition-transform duration-200 relative z-10;
+  cursor: grab;
+}
+
+.square.dragging .piece-container {
+  cursor: grabbing;
 }
 
 .piece-image {
@@ -11,12 +16,51 @@
 
 .square {
   @apply relative flex justify-center items-center cursor-pointer select-none
-         w-full h-full;
+         w-full h-full transition-colors duration-100;
 }
 
-.square.dark     { background-color: var(--color-board-dark); }
-.square.light    { background-color: var(--color-board-light); }
-.square.selected { background-color: rgba(255, 255, 0, 0.5); }
+.square.dark  { background-color: var(--color-board-dark); }
+.square.light { background-color: var(--color-board-light); }
+
+/* Overlays sit on top of the board color without replacing it */
+.square.last-move::after,
+.square.selected::after,
+.square.valid-move:hover::after {
+  content: "";
+  @apply absolute inset-0 pointer-events-none;
+}
+
+/* Last move highlight — yellow-green tint */
+.square.last-move::after {
+  background-color: rgba(155, 200, 0, 0.4);
+}
+
+/* Selected piece square — Lichess-style green tint (renders on top of last-move) */
+.square.selected::after {
+  background-color: rgba(20, 85, 30, 0.5);
+}
+
+/* Valid move hover — lighter green */
+.square.valid-move:hover::after {
+  background-color: rgba(20, 85, 30, 0.35);
+}
+
+/* Dot shown on empty valid-move squares */
+.valid-dot {
+  @apply absolute rounded-full pointer-events-none z-10;
+  width: 32%;
+  height: 32%;
+  background-color: rgba(20, 85, 30, 0.55);
+}
+
+/* Ring shown on valid-move squares that have a piece (e.g. future captures) */
+.valid-ring {
+  @apply absolute rounded-full pointer-events-none z-10;
+  width: 90%;
+  height: 90%;
+  border: 4px solid rgba(20, 85, 30, 0.55);
+  background: transparent;
+}
 
 .square-coord {
   @apply absolute top-0.5 right-0.5 text-[10px] font-bold;

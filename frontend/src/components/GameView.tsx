@@ -54,7 +54,7 @@ const GameView = () => {
                 to={`/play/${matchID}?playerID=0`}
                 className="btn-modern bg-[#e0e0e0]! text-surface! border-0!"
               >
-                Play as White
+                White
               </Link>
 
               <Link
@@ -68,7 +68,7 @@ const GameView = () => {
                 to={`/play/${matchID}?playerID=1`}
                 className="btn-modern bg-surface-hover! text-text-bright! border! border-border-hover!"
               >
-                Play as Black
+                Black
               </Link>
             </div>
           </div>
