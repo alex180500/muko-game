@@ -87,7 +87,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     lastPlayedMove.current = key;
     const dx = Math.abs((from % 8) - (to % 8));
     const dy = Math.abs(Math.floor(from / 8) - Math.floor(to / 8));
-    const isJump = (dx === 2 && dy === 0) || (dx === 0 && dy === 2);
+    const isJump = dx > 1 || dy > 1;
     playSound(isJump ? "jump" : "move");
   }, [G.lastMove]);
 
@@ -162,7 +162,6 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   };
 
   const onClick = (id: number) => {
-    // Ignore clicks that were the end of a drag (dragFrom was just cleared)
     if (playerID !== null && ctx.currentPlayer !== playerID) return;
 
     if (selected === null) {

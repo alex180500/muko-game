@@ -1,47 +1,68 @@
 import type { Game } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 
-/** Returns all valid destination indices for a piece at `from`. Mirrors server move validation exactly. */
+/** BFS: returns all squares reachable via chain jumps from `from`. */
+function getJumpMoves(cells: (string | null)[], from: number): number[] {
+  const x1 = from % 8;
+  const y1 = Math.floor(from / 8);
+  const reachable = new Set<number>();
+  const queue: { x: number; y: number; visited: Set<number> }[] = [
+    { x: x1, y: y1, visited: new Set([from]) },
+  ];
+
+  while (queue.length > 0) {
+    const { x, y, visited } = queue.shift()!;
+    for (const [dx, dy] of [
+      [2, 0],
+      [-2, 0],
+      [0, 2],
+      [0, -2],
+    ]) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (nx < 0 || nx > 7 || ny < 0 || ny > 7) continue;
+      const to = ny * 8 + nx;
+      if (cells[to] !== null) continue;
+      if (visited.has(to)) continue;
+      const mid = (y + dy / 2) * 8 + (x + dx / 2);
+      if (cells[mid] === null) continue;
+      reachable.add(to);
+      queue.push({ x: nx, y: ny, visited: new Set([...visited, to]) });
+    }
+  }
+
+  return [...reachable];
+}
+
+/** Returns all valid destination indices for a piece at `from` (slides + chain jumps). */
 export function getValidMoves(
   cells: (string | null)[],
   from: number,
 ): number[] {
   const x1 = from % 8;
   const y1 = Math.floor(from / 8);
-  const valid: number[] = [];
+  const valid = new Set<number>();
 
-  const check = (x2: number, y2: number) => {
-    if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) return;
-    const to = y2 * 8 + x2;
-    if (cells[to] !== null) return;
+  // Orthogonal slides (distance 1)
+  for (const [dx, dy] of [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ]) {
+    const nx = x1 + dx;
+    const ny = y1 + dy;
+    if (nx < 0 || nx > 7 || ny < 0 || ny > 7) continue;
+    const to = ny * 8 + nx;
+    if (cells[to] === null) valid.add(to);
+  }
 
-    const dx = Math.abs(x1 - x2);
-    const dy = Math.abs(y1 - y2);
-    const isSlide = dx + dy === 1;
+  // Chain jumps (BFS)
+  for (const to of getJumpMoves(cells, from)) valid.add(to);
 
-    let isJump = false;
-    if ((dx === 2 && dy === 0) || (dx === 0 && dy === 2)) {
-      const midX = (x1 + x2) / 2;
-      const midY = (y1 + y2) / 2;
-      if (cells[midY * 8 + midX] !== null) isJump = true;
-    }
-
-    if (isSlide || isJump) valid.push(to);
-  };
-
-  // Slides
-  check(x1 + 1, y1);
-  check(x1 - 1, y1);
-  check(x1, y1 + 1);
-  check(x1, y1 - 1);
-  // Jumps
-  check(x1 + 2, y1);
-  check(x1 - 2, y1);
-  check(x1, y1 + 2);
-  check(x1, y1 - 2);
-
-  return valid;
+  return [...valid];
 }
+
 
 export const Muko: Game = {
   name: "muko",
@@ -98,33 +119,9 @@ export const Muko: Game = {
       if (G.cells[from] !== ctx.currentPlayer) return INVALID_MOVE;
       if (G.cells[to] !== null) return INVALID_MOVE;
 
-      // Coordinate arithmetic
-      const x1 = from % 8;
-      const y1 = Math.floor(from / 8);
-      const x2 = to % 8;
-      const y2 = Math.floor(to / 8);
+      // Valid if `to` is reachable via a slide or any chain of jumps from `from`
+      if (!getValidMoves(G.cells, from).includes(to)) return INVALID_MOVE;
 
-      const dx = Math.abs(x1 - x2);
-      const dy = Math.abs(y1 - y2);
-
-      // Rule 1: Orthogonal move (Slide) - Distance of 1
-      const isSlide = dx + dy === 1;
-
-      // Rule 2: Jump logic (Fundamental for Ugolki) - Distance of 2 over a piece
-      // TODO: add chain jumps in future iterations
-      let isJump = false;
-      if ((dx === 2 && dy === 0) || (dx === 0 && dy === 2)) {
-        const midX = (x1 + x2) / 2;
-        const midY = (y1 + y2) / 2;
-        const midIndex = midY * 8 + midX;
-        if (G.cells[midIndex] !== null) {
-          isJump = true;
-        }
-      }
-
-      if (!isSlide && !isJump) return INVALID_MOVE;
-
-      // Execute move
       G.cells[to] = G.cells[from];
       G.cells[from] = null;
       G.lastMove = { from, to };
