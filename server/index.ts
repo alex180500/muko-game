@@ -1,6 +1,8 @@
 // server/index.ts
 import { Server, Origins } from "boardgame.io/server";
-import { Muko } from "@muko/logic";
+import * as Logic from "@muko/logic";
+
+const { Muko } = Logic;
 
 const customGenerator = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -16,4 +18,5 @@ const server = Server({
   ],
 });
 
-server.run(8000);
+const port = Number(process.env.PORT) || 8000;
+server.run(port);

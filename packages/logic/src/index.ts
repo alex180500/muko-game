@@ -1,1 +1,1 @@
-export * from './Game';
+export { Muko } from './Game';

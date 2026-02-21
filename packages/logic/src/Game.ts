@@ -5,18 +5,15 @@ export const Muko: Game = {
   name: "muko",
 
   setup: () => ({
-    // 8x8 Board. 0 = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
+    // 8x8 chessboard. 0 = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
     cells: Array(64)
       .fill(null)
       .map((_, i) => {
         const x = i % 8;
         const y = Math.floor(i / 8);
 
-        // Classic Ugolki setup: 4x4 (12 pieces usually) or 3x4 in corners.
-        // Let's do a 3x3 block in corners for simplicity to start.
-        // White (Player 0) in Bottom-Left
+        // 3x3 Muko setup: Player 0 (white) in bottom-left, Player 1 (black) in top-right.
         if (x < 3 && y >= 5) return "0";
-        // Black (Player 1) in Top-Right
         if (x >= 5 && y < 3) return "1";
         return null;
       }),
@@ -45,7 +42,7 @@ export const Muko: Game = {
       const isSlide = dx + dy === 1;
 
       // Rule 2: Jump logic (Fundamental for Ugolki) - Distance of 2 over a piece
-      // NOTE: This is a simplified check. Real Ugolki allows chain jumps.
+      // TODO: add chain jumps in future iterations
       let isJump = false;
       if ((dx === 2 && dy === 0) || (dx === 0 && dy === 2)) {
         const midX = (x1 + x2) / 2;

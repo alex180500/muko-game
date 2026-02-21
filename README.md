@@ -38,39 +38,49 @@ There are two possible setups in the game, which you can choose when creating a 
 
 ## 🏗️ Project Architecture & Deployment
 
-This project is organized as a monorepo containing both the frontend client and the game server.
+This project is organized as an **npm workspaces monorepo** with three packages:
+
+```
+muko-game/
+  packages/logic/   → Shared game rules (@muko/logic) — raw TypeScript, no build step
+  server/           → boardgame.io game server, run directly via tsx
+  frontend/         → React/Vite SPA
+```
+
+Both the server and frontend consume `@muko/logic` raw TypeScript source directly — no compilation step is needed for the shared package.
 
 ### Stack
 
 - **Engine**: [boardgame.io](https://boardgame.io/) (State management & Multiplayer)
-- **Frontend**: React, Vite, TypeScript, CSS Modules.
-- **Backend**: Node.js, Koa (with boardgame.io).
+- **Frontend**: React, Vite, TypeScript.
+- **Backend**: Node.js + Koa (via boardgame.io), run with `tsx`.
+- **Shared Logic**: `@muko/logic` — plain TypeScript, consumed directly by both packages.
 
 ### Running Locally
 
-To play the game on your local machine, you need to run both the server and the client.
+To play the game locally, run everything from the monorepo root.
 
-1. **Start the Server:** The server handles game state, moves, and matchmaking.
+1. **Install dependencies:**
 
    ```bash
-   cd server
    npm install
-   npm start
    ```
 
-   _Runs on port `8000`._
-
-2. **Start the Frontend:** The frontend provides the visual interface.
+2. **Start development mode (server + frontend):**
 
    ```bash
-   cd frontend
-   npm install
    npm run dev
    ```
 
-   _Runs on `http://localhost:5173` (typically)._
+   _Server runs on port `8000` and frontend on `http://localhost:5173` (typically). No build step is needed — both Vite and the server consume the shared logic package's TypeScript source directly._
 
-3. **Play!**
+3. **Optional — type-check the frontend:**
+
+   ```bash
+   npm run typecheck -w muko-frontend
+   ``` 
+
+4. **Play!**
    - Open the link shown in the frontend terminal.
    - Click **"Create New Game (Host)"**.
    - Share the URL (e.g., `.../play/K9X2`) with a friend (or open in a new browser tab) to join the game.
@@ -79,18 +89,20 @@ To play the game on your local machine, you need to run both the server and the 
 
 1. **Backend (Server):** Deploy the `server/` folder to a Node.js hosting provider (Render, Railway, Heroku).
    - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
+   - **Start Command**: `npm start` (runs via `tsx`, no compilation step needed)
    - **Environment Variables**:
-   - The port is typically handled automatically, but ensure it exposes port `8000` if required.
+     - `PORT`: The server port (defaults to `8000`, most providers set this automatically).
+     - `FRONTEND_URL`: The URL of your deployed frontend (for CORS).
 
 2. **Frontend (Client):** Deploy the `frontend/` folder to a static host (Vercel, Netlify).
    - **App Type**: Vite
-   - **Build Command**: `npm run build`
+   - **Root Directory**: `frontend/`
+   - **Build Command**: `npm run build` (runs `vite build` only — no separate TS compile step)
    - **Output Directory**: `dist`
    - **Environment Variables**:
-   - `VITE_GAME_SERVER`: The URL of your deployed backend.
+     - `VITE_GAME_SERVER`: The full URL of your deployed backend (e.g. `https://muko-server.onrender.com`).
 
-3. **Final Configuration:** In `server/index.ts`, update the `origins` array to allow your deployed frontend to connect.
+3. **Final Configuration:** In `server/index.ts`, update the `origins` array to include your deployed frontend URL.
 
 ## ⚖️ License & Intellectual Property
 

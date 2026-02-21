@@ -2,19 +2,21 @@
   "name": "muko-root",
   "private": true,
   "workspaces": [
+    "packages/*",
     "frontend",
-    "server",
-    "packages/*"
+    "server"
   ],
   "scripts": {
-    "predev": "npm run build -w @muko/logic",
-    "dev": "concurrently \"npm run dev:logic\" \"npm run dev:server\" \"npm run dev:frontend\"",
-    "dev:logic": "npm run watch -w @muko/logic",
-    "dev:frontend": "npm run dev -w muko-frontend",
-    "dev:server": "npm run dev -w muko-server",
-    "build": "npm run build --workspaces"
+    "dev": "concurrently \"npm run dev -w muko-server\" \"npm run dev -w muko-frontend\"",
+    "build": "npm run build -w muko-frontend",
+    "test": "npm test -w @muko/logic"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "overrides": {
+    "koa": "^2.15.0",
+    "is-generator-function": "1.0.10",
+    "@koa/router": "^12.0.1"
   }
 }

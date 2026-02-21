@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// The URL of your Render backend.
-// In development, we use window.location.hostname to support mobile testing on local network.
-const SERVER_URL =
-  import.meta.env.VITE_GAME_SERVER || `http://${window.location.hostname}:8000`;
+import { SERVER_URL } from "../config";
 
 const LobbyView = () => {
   const navigate = useNavigate();

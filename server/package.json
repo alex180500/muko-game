@@ -3,28 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "description": "Backend game server for Muko",
-  "main": "index.js",
   "scripts": {
     "dev": "tsx watch index.ts",
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsx index.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
+    "@muko/logic": "^1.0.0",
     "boardgame.io": "^0.50.2",
     "koa-static": "^5.0.0",
-    "@muko/logic": "*"
+    "tsx": "^4.21.0"
   },
   "devDependencies": {
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "koa": "^2.15.0",
-    "is-generator-function": "1.0.10"
   }
 }

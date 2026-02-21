@@ -1,34 +1,27 @@
+import { useMemo } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { FaHome, FaDice } from "react-icons/fa";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
-import { Muko } from "@muko/logic"; // Your rules
-import { MukoBoard } from "../Board"; // Your board UI
+import { Muko } from "@muko/logic";
+import { MukoBoard } from "../Board";
+import { SERVER_URL } from "../config";
 
-// The URL of your Render backend.
-// In development, we use window.location.hostname to support mobile testing on local network.
-const SERVER_URL =
-  import.meta.env.VITE_GAME_SERVER || `http://${window.location.hostname}:8000`;
-
-// We create a "GameClient" component dynamically based on the match ID
 const GameView = () => {
   const { matchID } = useParams();
   const [searchParams] = useSearchParams();
-
-  // Default to spectator check, but for MVP allow overriding via URL
-  // Usage: /play/matchID?playerID=0
   const playerID = searchParams.get("playerID") || undefined;
 
-  // We define the Client inside the component so we can pass the specific matchID
-  // In a real app, you might want to memoize this, but for simplicity:
-  const MukoClient = Client({
-    game: Muko,
-    board: MukoBoard,
-    multiplayer: SocketIO({
-      server: SERVER_URL,
-    }),
-    debug: false, // Turn off the debug panel for production
-  });
+  const MukoClient = useMemo(
+    () =>
+      Client({
+        game: Muko,
+        board: MukoBoard,
+        multiplayer: SocketIO({ server: SERVER_URL }),
+        debug: false,
+      }),
+    []
+  );
 
   return (
     <div>
