@@ -32,11 +32,11 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   useEffect(() => {
     const ctx = new AudioContext();
     audioCtx.current = ctx;
-    const load = (url: string) =>
-      fetch(url).then((r) => r.arrayBuffer()).then((b) => ctx.decodeAudioData(b));
-    load(moveSound).then((b) => (sfxBuffers.current.move = b));
-    load(jumpSound).then((b) => (sfxBuffers.current.jump = b));
-    load(gameEndSound).then((b) => (sfxBuffers.current.gameEnd = b));
+    const load = (url: string, key: string) =>
+      fetch(url).then((r) => r.arrayBuffer()).then((b) => ctx.decodeAudioData(b)).then((b) => (sfxBuffers.current[key] = b));
+    load(moveSound, "move");
+    load(jumpSound, "jump");
+    load(gameEndSound, "gameEnd");
     return () => { ctx.close(); };
   }, []);
 
@@ -60,10 +60,15 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     setIsFlipped(playerID === "1");
   }, [playerID]);
 
+  const lastPlayedMove = useRef<string | null>(null);
+
   // Play sound on each move
   useEffect(() => {
     if (!G.lastMove) return;
     const { from, to } = G.lastMove;
+    const key = `${from}-${to}`;
+    if (lastPlayedMove.current === key) return;
+    lastPlayedMove.current = key;
     const dx = Math.abs((from % 8) - (to % 8));
     const dy = Math.abs(Math.floor(from / 8) - Math.floor(to / 8));
     const isJump = (dx === 2 && dy === 0) || (dx === 0 && dy === 2);
