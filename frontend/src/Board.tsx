@@ -1,10 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { FaLightbulb, FaRetweet } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaRetweet } from "react-icons/fa";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
 import { getValidMoves } from "@muko/logic";
 import "./components/board/Board.css";
+import moveSound from "./assets/Move.mp3";
+import jumpSound from "./assets/Jump.mp3";
+import gameEndSound from "./assets/GameEnd.mp3";
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
@@ -19,6 +22,9 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const squareSizeRef = useRef<number>(75);
   const dragStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
   const DRAG_THRESHOLD = 6;
+  const sfxMove = useRef(new Audio(moveSound));
+  const sfxJump = useRef(new Audio(jumpSound));
+  const sfxGameEnd = useRef(new Audio(gameEndSound));
 
   const validMoves = useMemo<Set<number>>(
     () => (selected !== null ? new Set(getValidMoves(G.cells, selected)) : new Set()),
@@ -28,6 +34,25 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   useEffect(() => {
     setIsFlipped(playerID === "1");
   }, [playerID]);
+
+  // Play sound on each move
+  useEffect(() => {
+    if (!G.lastMove) return;
+    const { from, to } = G.lastMove;
+    const dx = Math.abs((from % 8) - (to % 8));
+    const dy = Math.abs(Math.floor(from / 8) - Math.floor(to / 8));
+    const isJump = (dx === 2 && dy === 0) || (dx === 0 && dy === 2);
+    const sfx = isJump ? sfxJump.current : sfxMove.current;
+    sfx.currentTime = 0;
+    sfx.play();
+  }, [G.lastMove]);
+
+  // Play game-end sound
+  useEffect(() => {
+    if (!ctx.gameover) return;
+    sfxGameEnd.current.currentTime = 0;
+    sfxGameEnd.current.play();
+  }, [ctx.gameover]);
 
   // Global pointer handlers for drag
   useEffect(() => {
@@ -180,8 +205,8 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
           Flip Board
         </button>
         <button className="btn-modern flex items-center gap-2!" onClick={() => setShowHints(!showHints)}>
-          <FaLightbulb size={14} />
-          {showHints ? "Hide Hints" : "Show Hints"}
+          {showHints ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
+          Hints
         </button>
       </div>
     </div>
