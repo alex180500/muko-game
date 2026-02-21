@@ -14,13 +14,13 @@
          w-full h-full;
 }
 
-.square.dark   { background-color: var(--board-dark); }
-.square.light  { background-color: var(--board-light); }
+.square.dark     { background-color: var(--color-board-dark); }
+.square.light    { background-color: var(--color-board-light); }
 .square.selected { background-color: rgba(255, 255, 0, 0.5); }
 
 .square-coord {
   @apply absolute top-0.5 right-0.5 text-[10px] font-bold;
 }
 
-.square-coord.light-text { color: var(--board-light); }
-.square-coord.dark-text  { color: var(--board-dark); }
+.square-coord.light-text { color: var(--color-board-light); }
+.square-coord.dark-text  { color: var(--color-board-dark); }

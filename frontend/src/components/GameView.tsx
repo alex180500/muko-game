@@ -28,29 +28,31 @@ const GameView = () => {
       <div className="absolute top-2.5 left-2.5 flex items-center gap-4">
         <Link
           to="/"
-          className="btn-modern !p-2 !m-0 flex items-center justify-center"
+          className="btn-modern p-2! m-0! flex items-center justify-center"
           title="Home"
         >
           <FaHome size={18} />
         </Link>
 
-        <div>
-          Match Code: <strong>{matchID}</strong>
+        <div className="text-text text-sm">
+          Match Code: <strong className="text-text-bright">{matchID}</strong>
           <br />
           Playing as:{" "}
-          <strong>{playerID ? `Player ${playerID}` : "Spectator"}</strong>
+          <strong className="text-text-bright">
+            {playerID ? `Player ${playerID}` : "Spectator"}
+          </strong>
         </div>
       </div>
 
       <div className="mt-[50px]">
         {/* If no ID is provided in URL, show buttons to pick a seat */}
         {!playerID && (
-          <div className="text-white text-center flex flex-col my-5 items-center">
+          <div className="text-center flex flex-col my-5 items-center">
             <h2>Choose your side</h2>
             <div className="flex gap-2.5 flex-wrap justify-center">
               <Link
                 to={`/play/${matchID}?playerID=0`}
-                className="btn-modern !bg-[#e0e0e0] !text-[#333] !border-0"
+                className="btn-modern bg-[#e0e0e0]! text-surface! border-0!"
               >
                 Play as White
               </Link>
@@ -64,7 +66,7 @@ const GameView = () => {
 
               <Link
                 to={`/play/${matchID}?playerID=1`}
-                className="btn-modern !bg-[#333] !text-white !border !border-[#555]"
+                className="btn-modern bg-surface-hover! text-text-bright! border! border-border-hover!"
               >
                 Play as Black
               </Link>

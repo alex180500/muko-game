@@ -35,40 +35,31 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     }
   };
 
-  const getBoardIndex = (visualIdx: number) => {
-    return isFlipped ? 63 - visualIdx : visualIdx;
-  };
+  const getBoardIndex = (visualIdx: number) =>
+    isFlipped ? 63 - visualIdx : visualIdx;
 
   return (
     <div className="flex flex-col items-center gap-5">
       <div
-        className="grid grid-cols-8 grid-rows-8 border-[5px] border-[#333] rounded-sm aspect-square"
+        className="grid grid-cols-8 grid-rows-8 border-[5px] border-board-border rounded-sm aspect-square"
         style={{ width: "min(95vw, 90vh, 600px)" }}
       >
         {Array(64)
           .fill(null)
           .map((_, visualIdx) => {
             const id = getBoardIndex(visualIdx);
-            const cell = G.cells[id];
-
             const x = visualIdx % 8;
             const y = Math.floor(visualIdx / 8);
             const isDark = (x + y) % 2 === 1;
 
-            // Coordinate visibility
-            const showRank = x === 7;
-            const showFile = y === 7;
-            const rankLabel = showRank
-              ? RANKS[7 - Math.floor(getBoardIndex(visualIdx) / 8)]
+            // Visual x=7 = right edge (rank), visual y=7 = bottom edge (file).
+            // Labels always reflect the square's real board coordinate.
+            const rankLabel = x === 7
+              ? RANKS[7 - Math.floor(id / 8)]
               : undefined;
-            const fileLabel = showFile
-              ? FILES[getBoardIndex(visualIdx) % 8]
+            const fileLabel = y === 7
+              ? FILES[id % 8]
               : undefined;
-
-            // SPECIAL FIX: When flipped, rank/file logic needs specific care IF we want them to stay on the same screen edges.
-            // Visual x=7 is always Right Edge.
-            // Visual y=7 is always Bottom Edge.
-            // The label needs to match the Square's REAL coordinate.
 
             return (
               <Square
@@ -80,7 +71,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
                 rank={rankLabel}
                 file={fileLabel}
               >
-                {cell && <Piece color={cell} />}
+                {G.cells[id] && <Piece color={G.cells[id]} />}
               </Square>
             );
           })}

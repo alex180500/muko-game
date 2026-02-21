@@ -21,24 +21,19 @@ export const Square = ({
   rank,
   file,
 }: SquareProps) => {
-  const squareClass = `square ${isDark ? "dark" : "light"} ${
-    isSelected ? "selected" : ""
-  }`;
+  const squareClass = ["square", isDark ? "dark" : "light", isSelected ? "selected" : ""]
+    .filter(Boolean)
+    .join(" ");
   const coordClass = `square-coord ${isDark ? "light-text" : "dark-text"}`;
 
   return (
     <div className={squareClass} onClick={() => onClick(id)}>
-      {/* Coordinates */}
       {rank && <span className={coordClass}>{rank}</span>}
       {file && (
-        <span
-          className={coordClass}
-          style={{ top: "auto", bottom: 2, right: "auto", left: 2 }}
-        >
+        <span className={`${coordClass} top-auto! bottom-0.5 right-auto! left-0.5`}>
           {file}
         </span>
       )}
-
       {children}
     </div>
   );
