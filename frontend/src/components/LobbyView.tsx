@@ -3,6 +3,8 @@ import { FaBug } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SERVER_URL } from "../config";
+import whitePiece from "../assets/piece-3d-white.svg";
+import blackPiece from "../assets/piece-3d-black.svg";
 
 const LobbyView = () => {
   const navigate = useNavigate();
@@ -33,9 +35,26 @@ const LobbyView = () => {
         <FaBug size={14} />
       </button>
 
-      <h1>Müko Online</h1>
+      <div className="flex items-center justify-center gap-3 mb-10">
+        <img src={whitePiece} className="w-15 h-15" />
+        <h1
+          className="text-7xl m-0"
+          style={{
+            fontFamily: "Rakkas",
+            background: "linear-gradient(to top, var(--primary-btn) 0%, var(--primary-btn) 57%, var(--color-text-bright) 57%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+            WebkitTextStroke: "0.5px var(--color-text-bright)",
+          }}
+        >
+          Müko
+        </h1>
+        <img src={blackPiece} className="w-15 h-15" />
+      </div>
 
-      <div className="mb-10">
+      <div className="mb-5">
         <button
           onClick={() => createMatch()}
           className="btn-modern primary text-[1.2rem]!"
@@ -46,7 +65,7 @@ const LobbyView = () => {
 
       <hr className="w-48 mx-auto border-border" />
 
-      <div className="mt-10">
+      <div className="mt-5">
         <h3>Join a Game</h3>
         <input
           type="text"

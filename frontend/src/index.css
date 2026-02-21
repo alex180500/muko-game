@@ -17,8 +17,8 @@
   --bg-color: #161512;
   --board-light: #f0d9b5;
   --board-dark: #b58863;
-  --primary-btn: #3692e7;
-  --primary-btn-hover: #4e9eed;
+  --primary-btn: #e73c1d;
+  --primary-btn-hover: #cd3005;
   --text-dim: #bababa;
 }
 
@@ -28,7 +28,7 @@ body {
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: var(--bg-color);
-  color: #c5c5c5;
+  color: var(--color-text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,23 +39,31 @@ body {
 h1,
 h2,
 h3 {
-  color: #fff;
+  color: var(--color-text-bright);
 }
 
 @layer components {
   .btn-modern {
-    @apply bg-[#262421] text-[#bababa] border border-[#3d3b39] px-5 py-2.5
-           text-[0.9rem] font-semibold cursor-pointer rounded no-underline
-           inline-block m-[5px] uppercase tracking-[0.5px] transition-all
-           duration-200;
+    @apply px-5 py-2.5 text-[0.9rem] font-semibold cursor-pointer rounded
+           no-underline inline-block m-[5px] uppercase tracking-[0.5px]
+           transition-all duration-200;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
   }
   .btn-modern:hover {
-    @apply bg-[#383531] text-white border-[#555] -translate-y-px;
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-bright);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
   }
   .btn-modern.primary {
-    @apply bg-[#3692e7] text-white border-none shadow-[0_2px_5px_rgba(0,0,0,0.3)];
+    background-color: var(--primary-btn);
+    color: var(--color-text-bright);
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   }
   .btn-modern.primary:hover {
-    @apply bg-[#4e9eed];
+    background-color: var(--primary-btn-hover);
   }
 }
