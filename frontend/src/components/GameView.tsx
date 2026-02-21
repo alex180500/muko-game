@@ -25,26 +25,10 @@ const GameView = () => {
 
   return (
     <div>
-      <div
-        style={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          display: "flex",
-          alignItems: "center",
-          gap: "15px",
-        }}
-      >
+      <div className="absolute top-2.5 left-2.5 flex items-center gap-4">
         <Link
           to="/"
-          className="btn-modern"
-          style={{
-            padding: "8px",
-            margin: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="btn-modern !p-2 !m-0 flex items-center justify-center"
           title="Home"
         >
           <FaHome size={18} />
@@ -58,58 +42,29 @@ const GameView = () => {
         </div>
       </div>
 
-      <div style={{ marginTop: 50 }}>
+      <div className="mt-[50px]">
         {/* If no ID is provided in URL, show buttons to pick a seat */}
         {!playerID && (
-          <div
-            style={{
-              color: "white",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              gap: "0px",
-              marginTop: "20px",
-              marginBottom: "20px",
-              alignItems: "center",
-            }}
-          >
+          <div className="text-white text-center flex flex-col my-5 items-center">
             <h2>Choose your side</h2>
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-                justifyContent: "center",
-              }}
-            >
+            <div className="flex gap-2.5 flex-wrap justify-center">
               <Link
                 to={`/play/${matchID}?playerID=0`}
-                className="btn-modern"
-                style={{
-                  backgroundColor: "#e0e0e0",
-                  color: "#333",
-                  border: "none",
-                }}
+                className="btn-modern !bg-[#e0e0e0] !text-[#333] !border-0"
               >
                 Play as White
               </Link>
 
               <Link
                 to={`/play/${matchID}?playerID=${Math.random() < 0.5 ? "0" : "1"}`}
-                className="btn-modern"
-                style={{ padding: "10px 15px", display: "flex", alignItems: "center" }}
+                className="btn-modern flex items-center"
               >
                 <FaDice size={24} />
               </Link>
 
               <Link
                 to={`/play/${matchID}?playerID=1`}
-                className="btn-modern"
-                style={{
-                  backgroundColor: "#333",
-                  color: "#fff",
-                  border: "1px solid #555",
-                }}
+                className="btn-modern !bg-[#333] !text-white !border !border-[#555]"
               >
                 Play as Black
               </Link>

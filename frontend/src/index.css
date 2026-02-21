@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --bg-color: #161512;
   --board-light: #f0d9b5;
@@ -5,10 +7,6 @@
   --primary-btn: #3692e7;
   --primary-btn-hover: #4e9eed;
   --text-dim: #bababa;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body {
@@ -24,55 +22,24 @@ body {
   min-height: 100vh;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   color: #fff;
 }
 
-.btn-modern {
-  background-color: #262421;
-  color: var(--text-dim);
-  border: 1px solid #3d3b39;
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-block;
-  margin: 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn-modern:hover {
-  background-color: #383531;
-  color: #fff;
-  border-color: #555;
-  transform: translateY(-1px);
-}
-
-.btn-modern.primary {
-  background-color: var(--primary-btn);
-  color: #fff;
-  border: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.btn-modern.primary:hover {
-  background-color: var(--primary-btn-hover);
-}
-
-.board-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
+@layer components {
+  .btn-modern {
+    @apply bg-[#262421] text-[#bababa] border border-[#3d3b39] px-5 py-2.5
+           text-[0.9rem] font-semibold cursor-pointer rounded no-underline
+           inline-block m-[5px] uppercase tracking-[0.5px] transition-all
+           duration-200;
+  }
+  .btn-modern:hover {
+    @apply bg-[#383531] text-white border-[#555] -translate-y-px;
+  }
+  .btn-modern.primary {
+    @apply bg-[#3692e7] text-white border-none shadow-[0_2px_5px_rgba(0,0,0,0.3)];
+  }
+  .btn-modern.primary:hover {
+    @apply bg-[#4e9eed];
+  }
 }

@@ -29,42 +29,27 @@ const LobbyView = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div className="text-center mt-[50px]">
       <h1>Müko Online</h1>
 
-      <div style={{ marginBottom: "40px" }}>
-        <button
-          onClick={createMatch}
-          style={{
-            padding: "10px 20px",
-            fontSize: "1.2rem",
-            cursor: "pointer",
-          }}
-        >
+      <div className="mb-10">
+        <button onClick={createMatch} className="btn-modern primary !text-[1.2rem]">
           Create New Game (Host)
         </button>
       </div>
 
-      <hr style={{ width: "200px" }} />
+      <hr className="w-48 mx-auto border-[#3d3b39]" />
 
-      <div style={{ marginTop: "40px" }}>
+      <div className="mt-10">
         <h3>Join a Game</h3>
         <input
           type="text"
           placeholder="Enter Game Code"
           value={joinID}
           onChange={(e) => setJoinID(e.target.value)}
-          style={{ padding: "8px", fontSize: "1rem" }}
+          className="px-2 py-2 text-base bg-[#262421] text-white border border-[#3d3b39] rounded"
         />
-        <button
-          onClick={joinMatch}
-          style={{
-            marginLeft: "10px",
-            padding: "8px 16px",
-            fontSize: "1rem",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={joinMatch} className="btn-modern">
           Join
         </button>
       </div>

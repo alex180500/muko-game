@@ -40,17 +40,10 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   };
 
   return (
-    <div className="board-container">
+    <div className="flex flex-col items-center gap-5">
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(8, 1fr)",
-          gridTemplateRows: "repeat(8, 1fr)",
-          width: "min(95vw, 90vh, 600px)",
-          aspectRatio: "1",
-          border: "5px solid #333",
-          borderRadius: "3px",
-        }}
+        className="grid grid-cols-8 grid-rows-8 border-[5px] border-[#333] rounded-sm aspect-square"
+        style={{ width: "min(95vw, 90vh, 600px)" }}
       >
         {Array(64)
           .fill(null)
@@ -93,7 +86,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
           })}
       </div>
 
-      <div className="controls">
+      <div className="flex gap-2.5">
         <button className="btn-modern" onClick={() => setIsFlipped(!isFlipped)}>
           Flip Board
         </button>
