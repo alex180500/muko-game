@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
+import { FaLightbulb, FaRetweet } from "react-icons/fa";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
@@ -116,8 +117,8 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     <div className="flex flex-col items-center gap-5">
       <div
         ref={boardRef}
-        className="grid grid-cols-8 grid-rows-8 border-[5px] border-board-border rounded-sm aspect-square"
-        style={{ width: "min(95vw, 90vh, 600px)", touchAction: "none" }}
+        className="grid grid-cols-8 grid-rows-8 rounded-lg overflow-hidden aspect-square"
+        style={{ width: "min(98vw, 90vh, 700px)", touchAction: "none" }}
       >
         {Array(64)
           .fill(null)
@@ -174,10 +175,12 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
       )}
 
       <div className="flex gap-2.5">
-        <button className="btn-modern" onClick={() => setIsFlipped(!isFlipped)}>
+        <button className="btn-modern flex items-center gap-2!" onClick={() => setIsFlipped(!isFlipped)}>
+          <FaRetweet size={14} />
           Flip Board
         </button>
-        <button className="btn-modern" onClick={() => setShowHints(!showHints)}>
+        <button className="btn-modern flex items-center gap-2!" onClick={() => setShowHints(!showHints)}>
+          <FaLightbulb size={14} />
           {showHints ? "Hide Hints" : "Show Hints"}
         </button>
       </div>

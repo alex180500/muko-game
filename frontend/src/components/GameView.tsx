@@ -6,6 +6,8 @@ import { SocketIO } from "boardgame.io/multiplayer";
 import { Muko } from "@muko/logic";
 import { MukoBoard } from "../Board";
 import { SERVER_URL } from "../config";
+import whitePiece from "../assets/piece-white.svg";
+import blackPiece from "../assets/piece-black.svg";
 
 const GameView = () => {
   const { matchID } = useParams();
@@ -52,8 +54,9 @@ const GameView = () => {
             <div className="flex gap-2.5 flex-wrap justify-center">
               <Link
                 to={`/play/${matchID}?playerID=0`}
-                className="btn-modern bg-[#e0e0e0]! text-surface! border-0!"
+                className="btn-modern bg-player-white! text-surface! border-0! flex items-center gap-2! pl-3!"
               >
+                <img src={whitePiece} className="w-8 h-8 shrink-0 my-[-4px]" />
                 White
               </Link>
 
@@ -66,8 +69,9 @@ const GameView = () => {
 
               <Link
                 to={`/play/${matchID}?playerID=1`}
-                className="btn-modern bg-surface-hover! text-text-bright! border! border-border-hover!"
+                className="btn-modern bg-surface-hover! text-text-bright! border! border-border-hover! flex items-center gap-2! pl-3!"
               >
+                <img src={blackPiece} className="w-8 h-8 shrink-0 my-[-4px]" />
                 Black
               </Link>
             </div>

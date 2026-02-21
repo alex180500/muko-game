@@ -17,6 +17,7 @@
 .square {
   @apply relative flex justify-center items-center cursor-pointer select-none
          w-full h-full transition-colors duration-100;
+  container-type: inline-size;
 }
 
 .square.dark  { background-color: var(--color-board-dark); }
@@ -63,7 +64,8 @@
 }
 
 .square-coord {
-  @apply absolute top-0.5 right-0.5 text-[10px] font-bold;
+  @apply absolute top-0.5 right-0.5 font-bold;
+  font-size: 10px;
 }
 
 .square-coord.light-text { color: var(--color-board-light); }
