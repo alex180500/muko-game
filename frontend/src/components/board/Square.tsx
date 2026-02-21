@@ -5,6 +5,7 @@ type SquareProps = {
   isDark: boolean;
   isSelected: boolean;
   isValidMove?: boolean;
+  showHints?: boolean;
   isLastMove?: boolean;
   isDragging?: boolean;
   onPointerDown?: (e: PointerEvent<HTMLDivElement>, id: number) => void;
@@ -19,6 +20,7 @@ export const Square = ({
   isDark,
   isSelected,
   isValidMove = false,
+  showHints = false,
   isLastMove = false,
   isDragging = false,
   onPointerDown,
@@ -52,8 +54,8 @@ export const Square = ({
           {file}
         </span>
       )}
-      {isValidMove && !children && <span className="valid-dot" />}
-      {isValidMove && children && <span className="valid-ring" />}
+      {isValidMove && showHints && !children && <span className="valid-dot" />}
+      {isValidMove && showHints && children && <span className="valid-ring" />}
       {children}
     </div>
   );

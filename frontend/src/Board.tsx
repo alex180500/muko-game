@@ -11,10 +11,13 @@ const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const squareSizeRef = useRef<number>(75);
+  const dragStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
+  const DRAG_THRESHOLD = 6;
 
   const validMoves = useMemo<Set<number>>(
     () => (selected !== null ? new Set(getValidMoves(G.cells, selected)) : new Set()),
@@ -27,13 +30,27 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
 
   // Global pointer handlers for drag
   useEffect(() => {
-    if (dragFrom === null) return;
-
     const onMove = (e: PointerEvent) => {
-      setDragPos({ x: e.clientX, y: e.clientY });
+      if (dragFrom !== null) {
+        // Already dragging — update position
+        setDragPos({ x: e.clientX, y: e.clientY });
+      } else if (dragStartRef.current !== null) {
+        // Pending — check if moved past threshold
+        const dx = e.clientX - dragStartRef.current.x;
+        const dy = e.clientY - dragStartRef.current.y;
+        if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
+          setSelected(dragStartRef.current.id);
+          setDragFrom(dragStartRef.current.id);
+          setDragPos({ x: e.clientX, y: e.clientY });
+          dragStartRef.current = null;
+        }
+      }
     };
 
     const onUp = (e: PointerEvent) => {
+      dragStartRef.current = null;
+      if (dragFrom === null) return;
+
       // Find the square element under the cursor (drag piece has pointer-events:none)
       const els = document.elementsFromPoint(e.clientX, e.clientY);
       const squareEl = els.find((el) => el.hasAttribute("data-square-id"));
@@ -63,11 +80,9 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const onSquarePointerDown = (e: React.PointerEvent, id: number) => {
     if (playerID !== null && ctx.currentPlayer !== playerID) return;
     if (G.cells[id] !== ctx.currentPlayer) return;
-    e.preventDefault();
     if (boardRef.current) squareSizeRef.current = boardRef.current.offsetWidth / 8;
-    setSelected(id);
-    setDragFrom(id);
-    setDragPos({ x: e.clientX, y: e.clientY });
+    // Don't start drag yet — wait for movement past threshold
+    dragStartRef.current = { id, x: e.clientX, y: e.clientY };
   };
 
   const onClick = (id: number) => {
@@ -122,6 +137,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
                 isDark={isDark}
                 isSelected={selected === id}
                 isValidMove={validMoves.has(id)}
+                showHints={showHints}
                 isLastMove={G.lastMove != null && (id === G.lastMove.from || id === G.lastMove.to)}
                 isDragging={dragFrom === id}
                 onPointerDown={onSquarePointerDown}
@@ -160,6 +176,9 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
       <div className="flex gap-2.5">
         <button className="btn-modern" onClick={() => setIsFlipped(!isFlipped)}>
           Flip Board
+        </button>
+        <button className="btn-modern" onClick={() => setShowHints(!showHints)}>
+          {showHints ? "Hide Hints" : "Show Hints"}
         </button>
       </div>
     </div>
