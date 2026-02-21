@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { FaEye, FaEyeSlash, FaRetweet } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaRetweet, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
@@ -16,15 +16,40 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showHints, setShowHints] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const squareSizeRef = useRef<number>(75);
   const dragStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
   const DRAG_THRESHOLD = 6;
-  const sfxMove = useRef(new Audio(moveSound));
-  const sfxJump = useRef(new Audio(jumpSound));
-  const sfxGameEnd = useRef(new Audio(gameEndSound));
+  const audioCtx = useRef<AudioContext | null>(null);
+  const sfxBuffers = useRef<Record<string, AudioBuffer | null>>({
+    move: null, jump: null, gameEnd: null,
+  });
+
+  // Pre-decode all audio on mount for zero-latency playback
+  useEffect(() => {
+    const ctx = new AudioContext();
+    audioCtx.current = ctx;
+    const load = (url: string) =>
+      fetch(url).then((r) => r.arrayBuffer()).then((b) => ctx.decodeAudioData(b));
+    load(moveSound).then((b) => (sfxBuffers.current.move = b));
+    load(jumpSound).then((b) => (sfxBuffers.current.jump = b));
+    load(gameEndSound).then((b) => (sfxBuffers.current.gameEnd = b));
+    return () => { ctx.close(); };
+  }, []);
+
+  const isMutedRef = useRef(false);
+  const playSound = (key: string) => {
+    if (isMutedRef.current) return;
+    const buf = sfxBuffers.current[key];
+    if (!buf || !audioCtx.current) return;
+    const src = audioCtx.current.createBufferSource();
+    src.buffer = buf;
+    src.connect(audioCtx.current.destination);
+    src.start(0);
+  };
 
   const validMoves = useMemo<Set<number>>(
     () => (selected !== null ? new Set(getValidMoves(G.cells, selected)) : new Set()),
@@ -42,16 +67,13 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     const dx = Math.abs((from % 8) - (to % 8));
     const dy = Math.abs(Math.floor(from / 8) - Math.floor(to / 8));
     const isJump = (dx === 2 && dy === 0) || (dx === 0 && dy === 2);
-    const sfx = isJump ? sfxJump.current : sfxMove.current;
-    sfx.currentTime = 0;
-    sfx.play();
+    playSound(isJump ? "jump" : "move");
   }, [G.lastMove]);
 
   // Play game-end sound
   useEffect(() => {
     if (!ctx.gameover) return;
-    sfxGameEnd.current.currentTime = 0;
-    sfxGameEnd.current.play();
+    playSound("gameEnd");
   }, [ctx.gameover]);
 
   // Global pointer handlers for drag
@@ -207,6 +229,13 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
         <button className="btn-modern flex items-center gap-2!" onClick={() => setShowHints(!showHints)}>
           {showHints ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
           Hints
+        </button>
+        <button className="btn-modern flex items-center gap-2!" onClick={() => {
+          const next = !isMuted;
+          setIsMuted(next);
+          isMutedRef.current = next;
+        }}>
+          {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
         </button>
       </div>
     </div>

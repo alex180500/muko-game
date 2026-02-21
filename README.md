@@ -139,8 +139,7 @@ If you have any questions about licensing or usage, please feel free to contact 
 ## 📑 TODO
 
 - [x] Possibility of seeing all possible moves for a piece when selected (like in lichess).
-- [ ] Music and sound effects.
-
-
+- [x] Music and sound effects.
+- [ ] 3x4 setup available.
 - [ ] Add a "Rematch" button at the end of the game.
 - [ ] Database with results of games (nicknames, wins/losses) and a point system based on the places of the pieces at the end of the game (e.g., 3 points for each piece in the correct position, 1 point for each piece in the opponent's starting area but not in the correct position).
