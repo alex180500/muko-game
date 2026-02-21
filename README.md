@@ -1,3 +1,46 @@
+<p align="center">
+<svg viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg" width="480">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rakkas&amp;display=swap');
+  </style>
+  <defs>
+    <linearGradient id="textGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%"   stop-color="#c42128"/>
+      <stop offset="57%"  stop-color="#c42128"/>
+      <stop offset="57%"  stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <!-- White piece -->
+  <g transform="translate(20, 20) scale(1.0)">
+    <ellipse cx="50" cy="60" rx="43" ry="25" fill="#6f6f6f"/>
+    <rect x="7" y="45" width="86" height="15" fill="#6f6f6f"/>
+    <ellipse cx="50" cy="45" rx="42" ry="25" fill="#e9e9e9" stroke="#6f6f6f" stroke-width="2"/>
+    <ellipse cx="50" cy="45" rx="30" ry="16.5" fill="none" stroke="#bababa" stroke-width="6.7"/>
+    <ellipse cx="50" cy="45" rx="14" ry="8" fill="none" stroke="#bababa" stroke-width="3"/>
+  </g>
+  <!-- Müko text -->
+  <text
+    x="250" y="107"
+    text-anchor="middle"
+    font-family="Rakkas, serif"
+    font-size="88"
+    fill="url(#textGrad)"
+    stroke="#ffffff"
+    stroke-width="0.6"
+    paint-order="stroke fill"
+  >Müko</text>
+  <!-- Black piece -->
+  <g transform="translate(380, 20) scale(1.0)">
+    <ellipse cx="50" cy="60" rx="43" ry="25" fill="#262626"/>
+    <rect x="7" y="45" width="86" height="15" fill="#262626"/>
+    <ellipse cx="50" cy="45" rx="42" ry="25" fill="#545454" stroke="#262626" stroke-width="2"/>
+    <ellipse cx="50" cy="45" rx="30" ry="16.5" fill="none" stroke="#3f3f3f" stroke-width="6.7"/>
+    <ellipse cx="50" cy="45" rx="14" ry="8" fill="none" stroke="#3f3f3f" stroke-width="3"/>
+  </g>
+</svg>
+</p>
+
 # Müko
 
 > [!NOTE]
