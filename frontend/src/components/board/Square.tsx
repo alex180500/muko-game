@@ -50,7 +50,9 @@ export const Square = ({
     >
       {rank && <span className={coordClass}>{rank}</span>}
       {file && (
-        <span className={`${coordClass} top-auto! bottom-0.5 right-auto! left-0.5`}>
+        <span
+          className={`${coordClass} top-auto! bottom-0.5 right-auto! left-0.5`}
+        >
           {file}
         </span>
       )}

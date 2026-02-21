@@ -20,8 +20,12 @@
   container-type: inline-size;
 }
 
-.square.dark  { background-color: var(--color-board-dark); }
-.square.light { background-color: var(--color-board-light); }
+.square.dark {
+  background-color: var(--color-board-dark);
+}
+.square.light {
+  background-color: var(--color-board-light);
+}
 
 /* Overlays sit on top of the board color without replacing it */
 .square.last-move::after,
@@ -68,5 +72,9 @@
   font-size: 10px;
 }
 
-.square-coord.light-text { color: var(--color-board-light); }
-.square-coord.dark-text  { color: var(--color-board-dark); }
+.square-coord.light-text {
+  color: var(--color-board-light);
+}
+.square-coord.dark-text {
+  color: var(--color-board-dark);
+}

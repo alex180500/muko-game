@@ -22,7 +22,7 @@ const GameView = () => {
         multiplayer: SocketIO({ server: SERVER_URL }),
         debug: false,
       }),
-    []
+    [],
   );
 
   return (

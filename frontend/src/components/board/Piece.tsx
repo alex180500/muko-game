@@ -17,13 +17,21 @@ export const Piece = memo(({ color, isGhost = false, style }: PieceProps) => {
     // Floating drag piece — rendered directly without the container
     return (
       <div style={style}>
-        <img src={src} alt={altText} className="piece-image" draggable={false} />
+        <img
+          src={src}
+          alt={altText}
+          className="piece-image"
+          draggable={false}
+        />
       </div>
     );
   }
 
   return (
-    <div className="piece-container" style={isGhost ? { opacity: 0.3 } : undefined}>
+    <div
+      className="piece-container"
+      style={isGhost ? { opacity: 0.3 } : undefined}
+    >
       <img src={src} alt={altText} className="piece-image" draggable={false} />
     </div>
   );

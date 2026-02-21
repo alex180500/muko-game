@@ -1,5 +1,11 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { FaEye, FaEyeSlash, FaRetweet, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaRetweet,
+  FaVolumeMute,
+  FaVolumeUp,
+} from "react-icons/fa";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
@@ -21,11 +27,15 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const squareSizeRef = useRef<number>(75);
-  const dragStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
+  const dragStartRef = useRef<{ id: number; x: number; y: number } | null>(
+    null,
+  );
   const DRAG_THRESHOLD = 6;
   const audioCtx = useRef<AudioContext | null>(null);
   const sfxBuffers = useRef<Record<string, AudioBuffer | null>>({
-    move: null, jump: null, gameEnd: null,
+    move: null,
+    jump: null,
+    gameEnd: null,
   });
 
   // Pre-decode all audio on mount for zero-latency playback
@@ -33,11 +43,16 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     const ctx = new AudioContext();
     audioCtx.current = ctx;
     const load = (url: string, key: string) =>
-      fetch(url).then((r) => r.arrayBuffer()).then((b) => ctx.decodeAudioData(b)).then((b) => (sfxBuffers.current[key] = b));
+      fetch(url)
+        .then((r) => r.arrayBuffer())
+        .then((b) => ctx.decodeAudioData(b))
+        .then((b) => (sfxBuffers.current[key] = b));
     load(moveSound, "move");
     load(jumpSound, "jump");
     load(gameEndSound, "gameEnd");
-    return () => { ctx.close(); };
+    return () => {
+      ctx.close();
+    };
   }, []);
 
   const isMutedRef = useRef(false);
@@ -52,8 +67,9 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   };
 
   const validMoves = useMemo<Set<number>>(
-    () => (selected !== null ? new Set(getValidMoves(G.cells, selected)) : new Set()),
-    [selected, G.cells]
+    () =>
+      selected !== null ? new Set(getValidMoves(G.cells, selected)) : new Set(),
+    [selected, G.cells],
   );
 
   useEffect(() => {
@@ -107,9 +123,15 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
       // Find the square element under the cursor (drag piece has pointer-events:none)
       const els = document.elementsFromPoint(e.clientX, e.clientY);
       const squareEl = els.find((el) => el.hasAttribute("data-square-id"));
-      const targetId = squareEl ? Number(squareEl.getAttribute("data-square-id")) : null;
+      const targetId = squareEl
+        ? Number(squareEl.getAttribute("data-square-id"))
+        : null;
 
-      if (targetId !== null && targetId !== dragFrom && validMoves.has(targetId)) {
+      if (
+        targetId !== null &&
+        targetId !== dragFrom &&
+        validMoves.has(targetId)
+      ) {
         moves.movePiece(dragFrom, targetId);
         setSelected(null);
       } else if (targetId === dragFrom) {
@@ -133,7 +155,8 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
   const onSquarePointerDown = (e: React.PointerEvent, id: number) => {
     if (playerID !== null && ctx.currentPlayer !== playerID) return;
     if (G.cells[id] !== ctx.currentPlayer) return;
-    if (boardRef.current) squareSizeRef.current = boardRef.current.offsetWidth / 8;
+    if (boardRef.current)
+      squareSizeRef.current = boardRef.current.offsetWidth / 8;
     // Don't start drag yet — wait for movement past threshold
     dragStartRef.current = { id, x: e.clientX, y: e.clientY };
   };
@@ -164,9 +187,27 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
     isFlipped ? 63 - visualIdx : visualIdx;
 
   const dragColor = dragFrom !== null ? G.cells[dragFrom] : null;
+  const winner: string | undefined = ctx.gameover?.winner;
 
   return (
     <div className="flex flex-col items-center gap-5">
+      {winner !== undefined && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60">
+          <div className="bg-surface border border-border rounded-xl px-10 py-8 text-center flex flex-col items-center gap-4 shadow-2xl">
+            <div className="text-4xl">🏆</div>
+            <h2 className="text-text-bright text-2xl font-bold m-0">
+              {winner === playerID
+                ? "You win!"
+                : winner === "0"
+                  ? "White wins!"
+                  : "Black wins!"}
+            </h2>
+            <a href="/" className="btn-modern primary mt-2">
+              Back to Lobby
+            </a>
+          </div>
+        </div>
+      )}
       <div
         ref={boardRef}
         className="grid grid-cols-8 grid-rows-8 rounded-lg overflow-hidden aspect-square"
@@ -180,7 +221,8 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
             const y = Math.floor(visualIdx / 8);
             const isDark = (x + y) % 2 === 1;
 
-            const rankLabel = x === 7 ? RANKS[7 - Math.floor(id / 8)] : undefined;
+            const rankLabel =
+              x === 7 ? RANKS[7 - Math.floor(id / 8)] : undefined;
             const fileLabel = y === 7 ? FILES[id % 8] : undefined;
 
             return (
@@ -191,7 +233,10 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
                 isSelected={selected === id}
                 isValidMove={validMoves.has(id)}
                 showHints={showHints}
-                isLastMove={G.lastMove != null && (id === G.lastMove.from || id === G.lastMove.to)}
+                isLastMove={
+                  G.lastMove != null &&
+                  (id === G.lastMove.from || id === G.lastMove.to)
+                }
                 isDragging={dragFrom === id}
                 onPointerDown={onSquarePointerDown}
                 onClick={onClick}
@@ -199,10 +244,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
                 file={fileLabel}
               >
                 {G.cells[id] && (
-                  <Piece
-                    color={G.cells[id]}
-                    isGhost={dragFrom === id}
-                  />
+                  <Piece color={G.cells[id]} isGhost={dragFrom === id} />
                 )}
               </Square>
             );
@@ -227,19 +269,28 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
       )}
 
       <div className="flex gap-2.5">
-        <button className="btn-modern flex items-center gap-2!" onClick={() => setIsFlipped(!isFlipped)}>
+        <button
+          className="btn-modern flex items-center gap-2!"
+          onClick={() => setIsFlipped(!isFlipped)}
+        >
           <FaRetweet size={14} />
           Flip Board
         </button>
-        <button className="btn-modern flex items-center gap-2!" onClick={() => setShowHints(!showHints)}>
+        <button
+          className="btn-modern flex items-center gap-2!"
+          onClick={() => setShowHints(!showHints)}
+        >
           {showHints ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
           Hints
         </button>
-        <button className="btn-modern flex items-center gap-2!" onClick={() => {
-          const next = !isMuted;
-          setIsMuted(next);
-          isMutedRef.current = next;
-        }}>
+        <button
+          className="btn-modern flex items-center gap-2!"
+          onClick={() => {
+            const next = !isMuted;
+            setIsMuted(next);
+            isMutedRef.current = next;
+          }}
+        >
           {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
         </button>
       </div>
