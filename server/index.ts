@@ -5,7 +5,7 @@ import * as Logic from "@muko/logic";
 const { Muko } = Logic;
 
 const customGenerator = () => {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
+  return Math.random().toString(36).substring(2, 7).toUpperCase();
 };
 
 const server = Server({
