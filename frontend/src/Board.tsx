@@ -192,7 +192,7 @@ export const MukoBoard = ({ G, ctx, moves, playerID, onPlayAgain }: BoardProps &
     <div className="flex flex-col items-center gap-5">
       {winner !== undefined && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60">
-          <div className="bg-surface border border-border rounded-xl px-10 py-8 text-center flex flex-col items-center gap-4 shadow-2xl">
+          <div className="bg-surface border border-border rounded-xl px-5 py-5 text-center flex flex-col items-center gap-4 shadow-2xl">
             <div className="text-4xl">🏆</div>
             <h2 className="text-text-bright text-2xl font-bold m-0">
               {winner === playerID
