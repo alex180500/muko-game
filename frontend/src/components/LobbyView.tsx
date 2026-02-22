@@ -23,7 +23,7 @@ const LobbyView = () => {
   };
 
   const joinMatch = () => {
-    if (joinID) navigate(`/play/${joinID}`);
+    if (joinID.trim()) navigate(`/play/${joinID.trim().toUpperCase()}`);
   };
 
   return (
@@ -79,8 +79,9 @@ const LobbyView = () => {
           type="text"
           placeholder="Enter Game Code"
           value={joinID}
-          onChange={(e) => setJoinID(e.target.value)}
-          className="px-2 py-2 text-base bg-surface text-text-bright border border-border rounded"
+          onChange={(e) => setJoinID(e.target.value.toUpperCase())}
+          onKeyDown={(e) => e.key === "Enter" && joinMatch()}
+          className="px-2 py-2 text-base bg-surface text-text-bright border border-border rounded uppercase"
         />
         <button onClick={joinMatch} className="btn-modern">
           Join

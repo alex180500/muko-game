@@ -18,7 +18,7 @@ import gameEndSound from "./assets/GameEnd.mp3";
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
-export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
+export const MukoBoard = ({ G, ctx, moves, playerID, onPlayAgain }: BoardProps & { onPlayAgain?: () => void }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showHints, setShowHints] = useState(false);
@@ -197,13 +197,20 @@ export const MukoBoard = ({ G, ctx, moves, playerID }: BoardProps) => {
             <h2 className="text-text-bright text-2xl font-bold m-0">
               {winner === playerID
                 ? "You win!"
-                : winner === "0"
-                  ? "White wins!"
-                  : "Black wins!"}
+                : playerID === undefined
+                  ? winner === "0" ? "White wins!" : "Black wins!"
+                  : "You lose."}
             </h2>
-            <a href="/" className="btn-modern primary mt-2">
-              Back to Lobby
-            </a>
+            <div className="flex gap-3 mt-2">
+              {onPlayAgain && (
+                <button onClick={onPlayAgain} className="btn-modern primary">
+                  Play Again
+                </button>
+              )}
+              <a href="/" className="btn-modern">
+                Back to Lobby
+              </a>
+            </div>
           </div>
         </div>
       )}
