@@ -26,8 +26,8 @@ There are two possible setups in the game, which you can choose when creating a 
 
 1. **Players**: Player 0 (White) and Player 1 (Black).
 2. **Setup**: The game allows two different kinds of setups:
-   - _3x3_ - Each player starts with 9 pieces arranged in a 3x3 grid in their respective corner (bottom-left for white, top-right for black).
-   - _3x4_ - Each player starts with 12 pieces arranged in a 3x4 grid in their respective corner.
+   - _3x3 or Standard_ - Each player starts with 9 pieces arranged in a 3x3 grid in their respective corner (bottom-left for white, top-right for black).
+   - _3x4 or Duygu Variant_ - Each player starts with 12 pieces arranged in a 3x4 grid in their respective corner.
 3. **Movement**: Players take turns moving one piece per turn in two possible ways:
    - **Slide**: Move one square orthogonally (horizontally or vertically) into an empty adjacent square.
    - **Jumps**: Jump over an adjacent piece (friendly or opponent's) into an empty square immediately beyond it. You can chain multiple jumps in one single movement for big leaps across the board.
