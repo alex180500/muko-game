@@ -7,5 +7,4 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss(), qrcode()],
   server: { host: true },
-  build: { outDir: "../dist", emptyOutDir: true },
 });
