@@ -10,11 +10,11 @@ const LobbyView = () => {
   const navigate = useNavigate();
   const [joinID, setJoinID] = useState("");
 
-  const createMatch = async (debug = false) => {
+  const createMatch = async (mode: "3x3" | "3x4" = "3x3", debug = false) => {
     try {
       const response = await axios.post(`${SERVER_URL}/games/muko/create`, {
         numPlayers: 2,
-        setupData: debug ? { debug: true } : undefined,
+        setupData: { mode, ...(debug ? { debug: true } : {}) },
       });
       navigate(`/play/${response.data.matchID}`);
     } catch (error) {
@@ -29,7 +29,7 @@ const LobbyView = () => {
   return (
     <div className="text-center mt-[50px]">
       <button
-        onClick={() => createMatch(true)}
+        onClick={() => createMatch("3x3", true)}
         className="btn-modern absolute top-2.5 right-2.5 text-[0.75rem]! opacity-40 hover:opacity-100 m-0!"
       >
         <FaBug size={14} />
@@ -54,12 +54,20 @@ const LobbyView = () => {
         <img src={blackPiece} className="w-15 h-15" />
       </div>
 
-      <div className="mb-5">
+      <div className="mb-5 flex gap-3 justify-center">
         <button
-          onClick={() => createMatch()}
-          className="btn-modern primary text-[1.2rem]!"
+          onClick={() => createMatch("3x3")}
+          className="btn-modern primary text-[1.2rem]! flex flex-col items-center leading-tight"
         >
-          Create New Game
+          <span>New Game</span>
+          <span className="text-[0.75rem] opacity-75">Standard</span>
+        </button>
+        <button
+          onClick={() => createMatch("3x4")}
+          className="btn-modern primary text-[1.2rem]! flex flex-col items-center leading-tight"
+        >
+          <span>New Game</span>
+          <span className="text-[0.75rem] opacity-75">Duygu Variant</span>
         </button>
       </div>
 
