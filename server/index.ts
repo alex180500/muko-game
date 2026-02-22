@@ -14,7 +14,7 @@ const server = Server({
   origins: [
     Origins.LOCALHOST,
     /^http:\/\/(\d+\.\d+\.\d+\.\d+|localhost)(:\d+)?$/,
-    process.env.FRONTEND_URL || "https://your-frontend-on-vercel.app",
+    process.env.FRONTEND_URL || "https://muko.romancino.com",
   ],
 });
 
