@@ -1,5 +1,5 @@
 <p align="center">
-<img src="logo.svg">
+   <img src="logo.svg">
 </p>
 
 # Müko
@@ -9,7 +9,7 @@
 
 **Müko** is a two-player strategy game played on an 8x8 (chess) board. It is inspired by **Ugolki** (also known as Corners), a variation of checkers popular in Eastern Europe.
 
-_Right now, the game is built to be playable online via sharable invite links._
+_The game is playable online via shareable invite links, with automatic seat assignment, session persistence, and rematch support._
 
 > [!CAUTION]
 > Although the core game code is Open Source, all artistic assets, game concept and branding are proprietary. Please see the **License & Intellectual Property** section at the bottom of this README for details.
@@ -40,6 +40,30 @@ There are two possible setups in the game, which you can choose when creating a 
 - **Flip Board**: Click the "Flip Board" button to rotate the view (Player 1/Black sees the board flipped by default).
 - **Home**: Click the House icon to return to the main lobby.
 
+## 🔗 Lobby & Session System
+
+### Joining a Game
+
+When the first player creates a game, they receive a shareable URL (e.g. `.../play/K9X2`) and can copy it via the **Copy Invite Link** button in the game header. When the second player opens that link:
+
+- **0 seats taken** → shown a side-picker (White / Random / Black).
+- **1 seat taken** → automatically placed on the remaining side with no interaction needed.
+- **2 seats taken** → joined as a spectator.
+
+### Session Persistence & Reconnection
+
+Each browser is assigned a stable anonymous identity (stored in `localStorage`). When a player joins a seat, their credentials are saved locally. If the page is refreshed or the browser crashes, re-opening the same URL reconnects them to their seat instantly — no re-joining needed.
+
+### Rematch / Play Again
+
+When a game ends, both players see a **Play Again** button. Either player can initiate:
+
+1. Click **Play Again** → a local side-picker appears (White / Random / Black).
+2. Choose a side → a new match is created, the choosing player is pre-joined to their selected seat, and the new match ID is broadcast to the other player via the game's chat channel.
+3. The other player is automatically redirected to the new match and placed on the remaining seat — no interaction required on their end.
+
+If both players click Play Again simultaneously, whoever picks a side first wins; the other is redirected as the auto-joiner.
+
 ## 🏗️ Project Architecture & Deployment
 
 This project is organized as an **npm workspaces monorepo** with three packages:
@@ -49,6 +73,15 @@ muko-game/
   packages/logic/   → Shared game rules (@muko/logic) — raw TypeScript, no build step
   server/           → boardgame.io game server, run directly via tsx
   frontend/         → React/Vite SPA
+    src/
+      lib/          → Client-side session utilities
+        identity.ts        → Stable per-browser anonymous ID (localStorage)
+        session.ts         → Per-match credential storage (MatchSession)
+        useMatchSession.ts → Hook: reconnect / auto-join / side-picker state machine
+      components/
+        LobbyView.tsx → Game creation & join-by-code screen
+        GameView.tsx  → Match screen, driven by useMatchSession
+      Board.tsx       → Game board + rematch logic (sendChatMessage broadcast)
 ```
 
 Both the server and frontend consume `@muko/logic` raw TypeScript source directly — no compilation step is needed for the shared package.
@@ -86,8 +119,11 @@ To play the game locally, run everything from the monorepo root.
 
 4. **Play!**
    - Open the link shown in the frontend terminal.
-   - Click **"Create New Game (Host)"**.
-   - Share the URL (e.g., `.../play/K9X2`) with a friend (or open in a new browser tab) to join the game.
+   - Click **New Game** (Standard or Duygu Variant).
+   - Share the URL or use the **Copy Invite Link** button in the game header. The second player visits the link and is automatically placed on the remaining side.
+
+> [!NOTE]
+> The lobby system uses `localStorage` for session persistence. Clearing browser storage will log a player out of their seat. Reloading the page or navigating back to the same match URL will reconnect automatically as long as storage is intact.
 
 ### Deployment Guide
 
@@ -101,12 +137,15 @@ To play the game locally, run everything from the monorepo root.
 2. **Frontend (Client):** Deploy the `frontend/` folder to a static host (Vercel, Netlify).
    - **App Type**: Vite
    - **Root Directory**: `frontend/`
-   - **Build Command**: `npm run build` (runs `vite build` only — no separate TS compile step)
+   - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
    - **Environment Variables**:
      - `VITE_GAME_SERVER`: The full URL of your deployed backend (e.g. `https://muko-server.onrender.com`).
 
 3. **Final Configuration:** In `server/index.ts`, update the `origins` array to include your deployed frontend URL.
+
+> [!NOTE]
+> The frontend must be served over **HTTPS** in production. `crypto.randomUUID()` (used to generate the anonymous client ID) requires a secure context; the code includes a `getRandomValues`-based fallback for plain-HTTP environments (e.g. local network testing on iOS Safari), but HTTPS is strongly recommended.
 
 ## ⚖️ License & Intellectual Property
 
@@ -142,6 +181,6 @@ If you have any questions about licensing or usage, please feel free to contact 
 
 ## 📑 TODO
 
-- [ ] Consistent player setups with nickname and logins.
-- [ ] Add a "Rematch" button at the end of the game.
+- [ ] Player nicknames (the `MatchSession` type already has a `playerName` field — wire up a name-input step in the side-picker).
+- [ ] Persistent accounts & auth (replace the anonymous `clientID` in `identity.ts` with a proper JWT/OAuth token; the `MatchSession` storage structure stays the same).
 - [ ] Database with results of games (nicknames, wins/losses) and a point system based on the places of the pieces at the end of the game (e.g., 3 points for each piece in the correct position, 1 point for each piece in the opponent's starting area but not in the correct position).
