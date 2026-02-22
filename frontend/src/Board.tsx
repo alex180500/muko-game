@@ -1,28 +1,59 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import {
+  FaDice,
   FaEye,
   FaEyeSlash,
   FaRetweet,
   FaVolumeMute,
   FaVolumeUp,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import type { BoardProps } from "boardgame.io/react";
 import { Square } from "./components/board/Square";
 import { Piece } from "./components/board/Piece";
 import { getValidMoves } from "@muko/logic";
+import { SERVER_URL } from "./config";
+import { clearSession, saveSession } from "./lib/session";
+import { getClientID } from "./lib/identity";
 import "./components/board/Board.css";
 import moveSound from "./assets/Move.mp3";
 import jumpSound from "./assets/Jump.mp3";
 import gameEndSound from "./assets/GameEnd.mp3";
+import whitePiece from "./assets/piece-white.svg";
+import blackPiece from "./assets/piece-black.svg";
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
-export const MukoBoard = ({ G, ctx, moves, playerID, onPlayAgain }: BoardProps & { onPlayAgain?: () => void }) => {
+export const MukoBoard = ({
+  G,
+  ctx,
+  moves,
+  playerID,
+  matchID,
+  sendChatMessage,
+  chatMessages,
+}: BoardProps) => {
+  const navigate = useNavigate();
+
+  // Auto-navigate both players when a rematch is signalled via chat
+  useEffect(() => {
+    const msg = [...(chatMessages ?? [])]
+      .reverse()
+      .find((m) => m.payload?.type === "rematch");
+    if (!msg) return;
+    const newMatchID: string = msg.payload.matchID;
+    clearSession(matchID); // drop credentials for the finished game
+    navigate(`/play/${newMatchID}`);
+  }, [chatMessages, matchID, navigate]);
   const [selected, setSelected] = useState<number | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showHints, setShowHints] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  // "idle"    → show Play Again / Back to Lobby
+  // "choosing" → show side-picker; picking a side creates the match + broadcasts
+  const [rematchPhase, setRematchPhase] = useState<"idle" | "choosing">("idle");
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -195,22 +226,79 @@ export const MukoBoard = ({ G, ctx, moves, playerID, onPlayAgain }: BoardProps &
           <div className="bg-surface border border-border rounded-xl px-5 py-5 text-center flex flex-col items-center gap-4 shadow-2xl">
             <div className="text-4xl">🏆</div>
             <h2 className="text-text-bright text-2xl font-bold m-0">
-              {winner === playerID
-                ? "You win!"
-                : playerID === undefined
-                  ? winner === "0" ? "White wins!" : "Black wins!"
-                  : "You lose."}
+              {winner === "0" ? "White wins!" : "Black wins!"}
             </h2>
-            <div className="flex gap-3 mt-2">
-              {onPlayAgain && (
-                <button onClick={onPlayAgain} className="btn-modern primary">
+
+            {rematchPhase === "idle" ? (
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={() => setRematchPhase("choosing")}
+                  className="btn-modern primary"
+                >
                   Play Again
                 </button>
-              )}
-              <a href="/" className="btn-modern">
-                Back to Lobby
-              </a>
-            </div>
+                <a href="/" className="btn-modern">
+                  Back to Lobby
+                </a>
+              </div>
+            ) : (
+              // Side-picker: choosing a side creates the match and broadcasts to the other player
+              <div className="flex flex-col items-center gap-3 mt-2">
+                <p className="m-0 text-sm opacity-70">Pick your side for the rematch:</p>
+                <div className="flex gap-2.5">
+                  {([
+                    { side: "0" as const, label: "White", img: whitePiece, cls: "btn-modern bg-player-white! text-surface! border-0! flex items-center gap-2! pl-3!" },
+                    { side: (Math.random() < 0.5 ? "0" : "1") as "0" | "1", label: null, img: null, cls: "btn-modern flex items-center" },
+                    { side: "1" as const, label: "Black", img: blackPiece, cls: "btn-modern bg-surface-hover! text-text-bright! border! border-border-hover! flex items-center gap-2! pl-3!" },
+                  ] as const).map(({ side, label, img, cls }, i) => (
+                    <button
+                      key={i}
+                      className={cls}
+                      onClick={async () => {
+                        try {
+                          const mode = G.mode ?? "3x3";
+                          // Create new match
+                          const { data: created } = await axios.post(
+                            `${SERVER_URL}/games/muko/create`,
+                            { numPlayers: 2, setupData: { mode } },
+                          );
+                          const newMatchID: string = created.matchID;
+                          // Join the chosen seat so arriving at the new URL skips the picker
+                          const clientID = getClientID();
+                          const { data: joined } = await axios.post(
+                            `${SERVER_URL}/games/muko/${newMatchID}/join`,
+                            { playerID: Number(side), playerName: `player-${clientID.slice(0, 6)}` },
+                          );
+                          saveSession({
+                            matchID: newMatchID,
+                            playerID: side,
+                            playerCredentials: joined.playerCredentials,
+                            clientID,
+                            mode,
+                          });
+                          // Broadcast: the other player auto-navigates and auto-joins the open seat
+                          sendChatMessage({ type: "rematch", matchID: newMatchID });
+                          clearSession(matchID);
+                          navigate(`/play/${newMatchID}`);
+                        } catch {
+                          console.error("Could not create rematch.");
+                          setRematchPhase("idle");
+                        }
+                      }}
+                    >
+                      {img && <img src={img} className="w-8 h-8 shrink-0 my-[-4px]" />}
+                      {label ?? <FaDice size={24} />}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="text-sm opacity-50 hover:opacity-80 underline bg-transparent border-0 cursor-pointer"
+                  onClick={() => setRematchPhase("idle")}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -1,14 +1,12 @@
-import { useMemo, useRef, useCallback } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useParams, Link } from "react-router-dom";
 import { FaHome, FaCopy, FaDice } from "react-icons/fa";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
-import type { BoardProps } from "boardgame.io/react";
 import { Muko } from "@muko/logic";
 import { MukoBoard } from "../Board";
 import { SERVER_URL } from "../config";
 import { useMatchSession } from "../lib/useMatchSession";
-import axios from "axios";
 import whitePiece from "../assets/piece-white.svg";
 import blackPiece from "../assets/piece-black.svg";
 
@@ -35,42 +33,18 @@ function CopyLinkButton({ matchID }: { matchID: string }) {
 
 const GameView = () => {
   const { matchID } = useParams<{ matchID: string }>();
-  const navigate = useNavigate();
   const { state, chooseSide } = useMatchSession(matchID!);
 
-  // Stable ref so the board wrapper (created once in useMemo) can call
-  // the latest onPlayAgain without capturing a stale closure.
-  const onPlayAgainRef = useRef<() => void>(() => {});
-
-  const onPlayAgain = useCallback(async () => {
-    const mode =
-      state.status === "ready" ? (state.session.mode ?? "3x3") : "3x3";
-    try {
-      const { data } = await axios.post(`${SERVER_URL}/games/muko/create`, {
-        numPlayers: 2,
-        setupData: { mode },
-      });
-      navigate(`/play/${data.matchID}`);
-    } catch {
-      console.error("Could not create new match for Play Again.");
-    }
-  }, [state, navigate]);
-
-  onPlayAgainRef.current = onPlayAgain;
-
-  // Create the boardgame.io Client once — wraps MukoBoard so onPlayAgain stays current
-  const MukoClient = useMemo(() => {
-    const WrappedBoard = (props: BoardProps) => (
-      <MukoBoard {...props} onPlayAgain={() => onPlayAgainRef.current()} />
-    );
-    return Client({
-      game: Muko,
-      board: WrappedBoard,
-      multiplayer: SocketIO({ server: SERVER_URL }),
-      debug: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const MukoClient = useMemo(
+    () =>
+      Client({
+        game: Muko,
+        board: MukoBoard,
+        multiplayer: SocketIO({ server: SERVER_URL }),
+        debug: false,
+      }),
+    [],
+  );
 
   // ─── Loading ───────────────────────────────────────────────────────────────
   if (state.status === "loading") {
