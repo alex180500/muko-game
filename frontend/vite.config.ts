@@ -4,7 +4,7 @@ import { qrcode } from "vite-plugin-qrcode";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tailwindcss(), qrcode()],
+export default defineConfig(({ command }) => ({
+  plugins: [react(), tailwindcss(), command === "serve" && qrcode()],
   server: { host: true },
-});
+}));
