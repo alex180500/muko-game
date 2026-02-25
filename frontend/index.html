@@ -1,14 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="src/assets/piece-3d-white.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Müko</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rakkas&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Favicon (served from /public for a stable path in production) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Müko</title>
+
+  <!-- Open Graph / WhatsApp share preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://muko.romancino.com/" />
+  <meta property="og:title" content="Müko" />
+  <meta property="og:description" content="Play Müko online - A strategy checker game" />
+  <meta property="og:image" content="https://muko.romancino.com/thumbnail.svg" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Rakkas&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
