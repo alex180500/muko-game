@@ -28,12 +28,14 @@ const LobbyView = () => {
 
   return (
     <div className="text-center mt-[50px]">
-      <button
-        onClick={() => createMatch("3x3", true)}
-        className="btn-modern absolute top-2.5 right-2.5 text-[0.75rem]! opacity-40 hover:opacity-100 m-0!"
-      >
-        <FaBug size={14} />
-      </button>
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => createMatch("3x3", true)}
+          className="btn-modern absolute top-2.5 right-2.5 text-[0.75rem]! opacity-40 hover:opacity-100 m-0!"
+        >
+          <FaBug size={14} />
+        </button>
+      )}
 
       <div className="flex items-center justify-center gap-3 mb-10">
         <img src={whitePiece} className="w-15 h-15" />
