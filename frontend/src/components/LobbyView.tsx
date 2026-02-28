@@ -42,7 +42,7 @@ const LobbyView = () => {
           style={{
             fontFamily: "Rakkas",
             background:
-              "linear-gradient(to top, var(--primary-btn) 0%, var(--primary-btn) 57%, var(--color-text-bright) 57%)",
+              "linear-gradient(to top, var(--color-primary) 0%, var(--color-primary) 57%, var(--color-text-bright) 57%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -76,17 +76,19 @@ const LobbyView = () => {
 
       <div className="mt-5">
         <h3>Join a Game</h3>
-        <input
-          type="text"
-          placeholder="Enter Game Code"
-          value={joinID}
-          onChange={(e) => setJoinID(e.target.value.toUpperCase())}
-          onKeyDown={(e) => e.key === "Enter" && joinMatch()}
-          className="px-2 py-2 text-base bg-surface text-text-bright border border-border rounded uppercase"
-        />
-        <button onClick={joinMatch} className="btn-modern">
-          Join
-        </button>
+        <div className="flex items-center justify-center gap-2">
+          <input
+            type="text"
+            placeholder="Enter Game Code"
+            value={joinID}
+            onChange={(e) => setJoinID(e.target.value.toUpperCase())}
+            onKeyDown={(e) => e.key === "Enter" && joinMatch()}
+            className="px-2 py-2 text-base bg-surface text-text-bright border border-border rounded uppercase"
+          />
+          <button onClick={joinMatch} className="btn-modern m-0!">
+            Join
+          </button>
+        </div>
       </div>
     </div>
   );
