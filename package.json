@@ -9,10 +9,12 @@
   "scripts": {
     "dev": "concurrently \"npm run dev -w muko-server\" \"npm run dev -w muko-frontend\"",
     "build": "npm run build -w muko-frontend",
-    "test": "npm test -w @muko/logic"
+    "test": "npm test -w @muko/logic",
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,css}\""
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "prettier": "^3.5.3"
   },
   "overrides": {
     "koa": "^2.15.0",
