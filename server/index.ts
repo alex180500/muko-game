@@ -1,9 +1,9 @@
-// server/index.ts
 import { Server, Origins } from "boardgame.io/server";
 import * as Logic from "@muko/logic";
 
 const { Muko } = Logic;
 
+// Custom match ID generator: 5 uppercase alphanumeric characters
 const customGenerator = () => {
   return Math.random().toString(36).substring(2, 7).toUpperCase();
 };

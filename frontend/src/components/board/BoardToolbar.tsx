@@ -23,10 +23,7 @@ const BoardToolbar = ({
 }: BoardToolbarProps) => {
   return (
     <div className="flex gap-2.5">
-      <button
-        className="btn-modern flex items-center gap-2!"
-        onClick={onFlip}
-      >
+      <button className="btn-modern flex items-center gap-2!" onClick={onFlip}>
         <FaRetweet size={14} />
         Flip Board
       </button>

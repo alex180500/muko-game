@@ -41,7 +41,8 @@ const LobbyView = () => {
           className="text-7xl m-0"
           style={{
             fontFamily: "Rakkas",
-            background: "linear-gradient(to top, var(--primary-btn) 0%, var(--primary-btn) 57%, var(--color-text-bright) 57%)",
+            background:
+              "linear-gradient(to top, var(--primary-btn) 0%, var(--primary-btn) 57%, var(--color-text-bright) 57%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",

@@ -1,1 +1,1 @@
-export { Muko, getValidMoves } from './Game';
+export { Muko, getValidMoves } from "./Game";

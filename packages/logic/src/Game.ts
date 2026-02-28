@@ -1,7 +1,7 @@
 import type { Game } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 
-/** BFS: returns all squares reachable via chain jumps from `from`. */
+// BFS: returns all squares reachable via chain jumps from `from`.
 function getJumpMoves(cells: (string | null)[], from: number): number[] {
   const x1 = from % 8;
   const y1 = Math.floor(from / 8);
@@ -34,7 +34,7 @@ function getJumpMoves(cells: (string | null)[], from: number): number[] {
   return [...reachable];
 }
 
-/** Returns all valid destination indices for a piece at `from` (slides + chain jumps). */
+// Returns all valid destination indices for a piece at `from` (slides + chain jumps).
 export function getValidMoves(
   cells: (string | null)[],
   from: number,
@@ -63,7 +63,6 @@ export function getValidMoves(
   return [...valid];
 }
 
-
 export const Muko: Game = {
   name: "muko",
 
@@ -74,14 +73,18 @@ export const Muko: Game = {
       const cells: (string | null)[] = Array(64).fill(null);
       // 3x3 debug: White: 8 pieces in target (fgh rows 6-8), 1 piece a slide away
       [4, 6, 7, 13, 14, 15, 21, 22, 23].forEach((i) => (cells[i] = "0"));
-      // Black: 8 pieces in target (abc rows 1-3), 1 piece a slide away
+      // 3x3 debug: Black: 8 pieces in target (abc rows 1-3), 1 piece a slide away
       [32, 41, 42, 48, 49, 50, 56, 57, 58].forEach((i) => (cells[i] = "1"));
-      return { cells, mode: "3x3" as const, lastMove: null as { from: number; to: number } | null };
+      return {
+        cells,
+        mode: "3x3" as const,
+        lastMove: null as { from: number; to: number } | null,
+      };
     }
 
     return {
       mode,
-      // 8x8 chessboard. null = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
+      // 8x8 board: null = empty, '0' = Player 0 (White), '1' = Player 1 (Black)
       cells: Array(64)
         .fill(null)
         .map((_, i) => {
@@ -141,7 +144,6 @@ export const Muko: Game = {
     movePiece: ({ G, ctx }, from: number, to: number) => {
       if (G.cells[from] !== ctx.currentPlayer) return INVALID_MOVE;
       if (G.cells[to] !== null) return INVALID_MOVE;
-
       // Valid if `to` is reachable via a slide or any chain of jumps from `from`
       if (!getValidMoves(G.cells, from).includes(to)) return INVALID_MOVE;
 

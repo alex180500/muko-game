@@ -17,31 +17,26 @@ interface MatchInfo {
 
 export type SessionState =
   | { status: "loading" }
-  /** Both seats free — player must pick a side */
+  // Both seats free — player must pick a side
   | { status: "choose"; matchInfo: MatchInfo }
-  /** Session established (or reconnected) — ready to play */
+  // Session established (or reconnected) — ready to play
   | { status: "ready"; session: MatchSession }
-  /** Both seats occupied and this browser has no session — spectator */
+  // Both seats occupied and this browser has no session — spectator
   | { status: "spectator" }
   | { status: "error"; message: string };
 
-/**
- * Manages the player's identity in a specific match.
- *
- * On mount:
- *  1. Looks for a saved session in localStorage → reconnects immediately.
- *  2. Otherwise fetches match info from the server:
- *     - 0 seats taken → returns "choose" so the UI can display side-picker.
- *     - 1 seat taken  → silently auto-joins the remaining seat.
- *     - 2 seats taken → returns "spectator".
- *
- * `chooseSide` is called by the side-picker UI and completes the join.
- */
+// Manages the player's identity in a specific match.
+// On mount:
+//   1. Looks for a saved session in localStorage → reconnects immediately.
+//   2. Otherwise fetches match info from the server:
+//      - 0 seats taken → returns "choose" so the UI can display side-picker.
+//      - 1 seat taken  → silently auto-joins the remaining seat.
+//      - 2 seats taken → returns "spectator".
+// `chooseSide` is called by the side-picker UI and completes the join.
 export function useMatchSession(matchID: string) {
   const [state, setState] = useState<SessionState>({ status: "loading" });
 
-  // ─── Internal helpers ────────────────────────────────────────────────────
-
+  // --- Internal helpers ---
   const callJoinAPI = useCallback(
     async (
       playerID: "0" | "1",
@@ -74,8 +69,7 @@ export function useMatchSession(matchID: string) {
     [matchID],
   );
 
-  // ─── Boot logic ─────────────────────────────────────────────────────────
-
+  // --- Boot logic ---
   useEffect(() => {
     let cancelled = false;
 
@@ -122,26 +116,30 @@ export function useMatchSession(matchID: string) {
       const session = await callJoinAPI(openID, mode);
       if (!cancelled) {
         if (session) setState({ status: "ready", session });
-        else setState({ status: "error", message: "Could not join — seat may already be taken." });
+        else
+          setState({
+            status: "error",
+            message: "Could not join — seat may already be taken.",
+          });
       }
     }
 
     init().catch((err) => {
       console.error("useMatchSession unexpected error:", err);
       if (!cancelled)
-        setState({ status: "error", message: "Unexpected error — please try again." });
+        setState({
+          status: "error",
+          message: "Unexpected error — please try again.",
+        });
     });
     return () => {
       cancelled = true;
     };
   }, [matchID, callJoinAPI]);
 
-  // ─── Public API ─────────────────────────────────────────────────────────
-
-  /**
-   * Called by the choose-side UI. Completes the join for the given seat.
-   * Handles the possible race where the seat was taken between render and click.
-   */
+  // --- Public API ---
+  // Called by the choose-side UI. Completes the join for the given seat.
+  // Handles the possible race where the seat was taken between render and click.
   const chooseSide = useCallback(
     async (playerID: "0" | "1", playerName?: string) => {
       if (state.status !== "choose") return;
