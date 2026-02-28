@@ -3,6 +3,9 @@
 // When auth/accounts are added, the same structure can be synced to a database
 // with the clientID becoming a proper user ID.
 
+const SESSION_PREFIX = "muko:session:";
+const MAX_SESSION_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+
 export interface MatchSession {
   matchID: string;
   // boardgame.io player seat: "0" = White, "1" = Black
@@ -15,9 +18,11 @@ export interface MatchSession {
   playerName?: string;
   // Game mode, stored so Play Again can reuse it
   mode?: "3x3" | "3x4";
+  // Timestamp for stale session cleanup
+  createdAt?: number;
 }
 
-const key = (matchID: string) => `muko:session:${matchID}`;
+const key = (matchID: string) => `${SESSION_PREFIX}${matchID}`;
 
 export const getSession = (matchID: string): MatchSession | null => {
   try {
@@ -29,9 +34,40 @@ export const getSession = (matchID: string): MatchSession | null => {
 };
 
 export const saveSession = (session: MatchSession): void => {
-  localStorage.setItem(key(session.matchID), JSON.stringify(session));
+  const withTimestamp = {
+    ...session,
+    createdAt: session.createdAt ?? Date.now(),
+  };
+  localStorage.setItem(key(session.matchID), JSON.stringify(withTimestamp));
 };
 
 export const clearSession = (matchID: string): void => {
   localStorage.removeItem(key(matchID));
+};
+
+// Removes sessions older than MAX_SESSION_AGE_MS from localStorage.
+// Call once on app startup to prevent unbounded accumulation.
+export const cleanupStaleSessions = (): void => {
+  const now = Date.now();
+  const keysToRemove: string[] = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!k?.startsWith(SESSION_PREFIX)) continue;
+
+    try {
+      const raw = localStorage.getItem(k);
+      if (!raw) continue;
+      const session = JSON.parse(raw) as MatchSession;
+      // Remove if older than threshold, or if missing createdAt (legacy entry)
+      if (!session.createdAt || now - session.createdAt > MAX_SESSION_AGE_MS) {
+        keysToRemove.push(k);
+      }
+    } catch {
+      // Corrupt entry — remove it
+      keysToRemove.push(k);
+    }
+  }
+
+  keysToRemove.forEach((k) => localStorage.removeItem(k));
 };
