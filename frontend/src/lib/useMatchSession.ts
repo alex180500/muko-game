@@ -97,7 +97,6 @@ export function useMatchSession(matchID: string) {
       const takenPlayers = matchInfo.players.filter(
         (p) => p.name !== undefined,
       );
-      const mode = matchInfo.setupData?.mode;
 
       if (takenPlayers.length === 2) {
         if (!cancelled) setState({ status: "spectator" });
@@ -110,18 +109,8 @@ export function useMatchSession(matchID: string) {
         return;
       }
 
-      // Exactly 1 seat taken → auto-join the other
-      const takenID = takenPlayers[0].id; // 0 or 1
-      const openID: "0" | "1" = takenID === 0 ? "1" : "0";
-      const session = await callJoinAPI(openID, mode);
-      if (!cancelled) {
-        if (session) setState({ status: "ready", session });
-        else
-          setState({
-            status: "error",
-            message: "Could not join — seat may already be taken.",
-          });
-      }
+      // Show picker with the taken seat disabled rather than auto-joining.
+      if (!cancelled) setState({ status: "choose", matchInfo });
     }
 
     init().catch((err) => {

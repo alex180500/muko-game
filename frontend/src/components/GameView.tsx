@@ -66,6 +66,11 @@ const GameView = () => {
 
   // --- Choose side ---
   if (state.status === "choose") {
+    // Determine if a seat is already taken so SidePicker can disable it (F-03).
+    const takenPlayer = state.matchInfo.players.find((p) => p.name !== undefined);
+    const takenSeat =
+      takenPlayer !== undefined ? (String(takenPlayer.id) as "0" | "1") : undefined;
+
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-6">
         <div className="absolute top-2.5 left-2.5">
@@ -79,7 +84,7 @@ const GameView = () => {
         </div>
 
         <h2 className="m-0">Choose your side</h2>
-        <SidePicker onChoose={chooseSide} />
+        <SidePicker onChoose={chooseSide} takenSeat={takenSeat} />
 
         <div className="flex flex-col items-center gap-2 opacity-70 text-sm">
           <p className="m-0">Share this match with your opponent:</p>
