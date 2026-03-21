@@ -1,7 +1,5 @@
-// Stores and retrieves per-match session data in localStorage.
-// Each match gets its own key so sessions survive page reloads and crashes.
-// When auth/accounts are added, the same structure can be synced to a database
-// with the clientID becoming a proper user ID.
+// Per-match session data stored in sessionStorage (tab-scoped, cleared on close).
+// clientID in identity.ts stays in localStorage — it is not a credential.
 
 const SESSION_PREFIX = "muko:session:";
 const MAX_SESSION_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -26,7 +24,7 @@ const key = (matchID: string) => `${SESSION_PREFIX}${matchID}`;
 
 export const getSession = (matchID: string): MatchSession | null => {
   try {
-    const raw = localStorage.getItem(key(matchID));
+    const raw = sessionStorage.getItem(key(matchID));
     return raw ? (JSON.parse(raw) as MatchSession) : null;
   } catch {
     return null;
@@ -38,25 +36,26 @@ export const saveSession = (session: MatchSession): void => {
     ...session,
     createdAt: session.createdAt ?? Date.now(),
   };
-  localStorage.setItem(key(session.matchID), JSON.stringify(withTimestamp));
+  sessionStorage.setItem(key(session.matchID), JSON.stringify(withTimestamp));
 };
 
 export const clearSession = (matchID: string): void => {
-  localStorage.removeItem(key(matchID));
+  sessionStorage.removeItem(key(matchID));
 };
 
-// Removes sessions older than MAX_SESSION_AGE_MS from localStorage.
-// Call once on app startup to prevent unbounded accumulation.
+// Removes sessions older than MAX_SESSION_AGE_MS from sessionStorage.
+// sessionStorage clears on tab close anyway, but this guards against
+// very long-lived tabs accumulating many stale entries.
 export const cleanupStaleSessions = (): void => {
   const now = Date.now();
   const keysToRemove: string[] = [];
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const k = sessionStorage.key(i);
     if (!k?.startsWith(SESSION_PREFIX)) continue;
 
     try {
-      const raw = localStorage.getItem(k);
+      const raw = sessionStorage.getItem(k);
       if (!raw) continue;
       const session = JSON.parse(raw) as MatchSession;
       // Remove if older than threshold, or if missing createdAt (legacy entry)
@@ -69,5 +68,5 @@ export const cleanupStaleSessions = (): void => {
     }
   }
 
-  keysToRemove.forEach((k) => localStorage.removeItem(k));
+  keysToRemove.forEach((k) => sessionStorage.removeItem(k));
 };
