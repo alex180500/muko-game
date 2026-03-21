@@ -11,6 +11,7 @@
     "@muko/logic": "^1.0.0",
     "boardgame.io": "^0.50.2",
     "koa-static": "^5.0.0",
+    "pino": "^10.3.1",
     "tsx": "^4.21.0"
   },
   "devDependencies": {
