@@ -110,6 +110,15 @@ function countInTarget(
 export const Muko: Game = {
   name: "muko",
 
+  // Reject debug mode outside of development so callers can't create a near-win board.
+  validateSetupData: (
+    setupData: { debug?: boolean; mode?: ModeKey } | undefined,
+  ) => {
+    if (setupData?.debug && process.env.NODE_ENV === "production") {
+      return "Debug mode is not available in production.";
+    }
+  },
+
   setup: (_, setupData?: { debug?: boolean; mode?: ModeKey }): MukoState => {
     const mode: ModeKey = setupData?.mode ?? "3x3";
     const { cols, rows } = MODES[mode];

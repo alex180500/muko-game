@@ -88,6 +88,11 @@ export const MukoBoard = ({
       .find((m) => m.payload?.type === "rematch");
     if (!msg) return;
     const newMatchID: string = msg.payload.matchID;
+    // Reject non-alphanumeric IDs to prevent open redirect via chat payload.
+    if (!/^[A-Z0-9]{5,6}$/.test(newMatchID)) {
+      console.warn("[security] Rejected invalid rematch matchID:", newMatchID);
+      return;
+    }
     clearSession(matchID);
     navigate(`/play/${newMatchID}`);
   }, [chatMessages, matchID, navigate]);
