@@ -93,9 +93,10 @@ const server = Server({
   ],
 });
 
-// Prepend rate limiter so it runs before boardgame.io route handlers.
+// Prepend both middlewares so they wrap boardgame.io's internals entirely,
+// ensuring ALL requests (including CORS preflights) are rate-limited and logged.
+(server.app.middleware as any[]).unshift(requestLogger);
 (server.app.middleware as any[]).unshift(rateLimiter);
-server.app.use(requestLogger);
 
 const port = Number(process.env.PORT) || 8000;
 server.run(port);
