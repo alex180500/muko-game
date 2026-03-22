@@ -93,6 +93,9 @@ const server = Server({
   ],
 });
 
+// Trust proxy headers so rate limiter uses actual client IPs, not the reverse proxy IP.
+server.app.proxy = true;
+
 // Prepend both middlewares so they wrap boardgame.io's internals entirely,
 // ensuring ALL requests (including CORS preflights) are rate-limited and logged.
 (server.app.middleware as any[]).unshift(requestLogger);

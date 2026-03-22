@@ -114,8 +114,12 @@ export const Muko: Game = {
   validateSetupData: (
     setupData: { debug?: boolean; mode?: ModeKey } | undefined,
   ) => {
-    if (setupData?.debug && process.env.NODE_ENV === "production") {
-      return "Debug mode is not available in production.";
+    if (setupData?.mode && !MODES[setupData.mode]) {
+      return `Invalid mode: ${setupData.mode}`;
+    }
+
+    if (setupData?.debug && process.env.NODE_ENV !== "development") {
+      return "Debug mode is only available in development environment.";
     }
   },
 
